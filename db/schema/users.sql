@@ -31,7 +31,7 @@ CREATE TABLE products (
   name VARCHAR(255) NOT NULL,
   date_added DATE NOT NULL,
   brand VARCHAR(255),
-  price SMALLINT
+  price INTEGER
 );
 
 DROP TABLE IF EXISTS users CASCADE;
