@@ -42,7 +42,7 @@ const booksApiRoutes = require('./routes/books-api');
 app.use('/api/users', userApiRoutes);
 app.use('/api/widgets', widgetApiRoutes);
 app.use('/api/users', userApiRoutes);
-app.use('/api/films', filmApiRoutes);
+app.use('/api/films', filmsApiRoutes);
 app.use('/api/restaurants', restaurantApiRoutes);
 app.use('/users', usersRoutes);
 // hadling middleware errors
