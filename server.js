@@ -45,6 +45,11 @@ app.use('/api/users', userApiRoutes);
 app.use('/api/films', filmApiRoutes);
 app.use('/api/restaurants', restaurantApiRoutes);
 app.use('/users', usersRoutes);
+// hadling middleware errors
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 // Note: mount other resources here, using the same pattern above
 
 // Home page
