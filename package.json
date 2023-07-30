@@ -18,10 +18,7 @@
     "express": "^4.17.1",
     "morgan": "^1.9.1",
     "pg": "^8.5.0",
-<<<<<<< HEAD
-=======
     "request": "^2.88.2",
->>>>>>> ad7a0e7f472bca19afe82990aceb2e83f7ebc212
     "sass": "^1.35.1"
   },
   "devDependencies": {

@@ -1,10 +1,12 @@
 // load .env data into process.env
 require('dotenv').config();
 
+
 // Web server config
 const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
 const morgan = require('morgan');
+
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -28,7 +30,7 @@ app.use(express.static('public'));
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
-const userApiRoutes = require('./routes/users-api');
+/*const userApiRoutes = require('./routes/users-api');
 const widgetApiRoutes = require('./routes/widgets-api');
 const usersRoutes = require('./routes/users');
 const filmsApiRoutes = require('./routes/films-api');
@@ -52,9 +54,18 @@ app.use((err, req, res, next) => {
 });
 // Note: mount other resources here, using the same pattern above
 
+
+*/
 // Home page
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
+
+
+//populate the lists
+
+const populateRoute  = require("./routes/populate");
+app.use("/",populateRoute);
+
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -63,3 +74,4 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+
