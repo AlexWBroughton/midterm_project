@@ -32,6 +32,7 @@ app.use(express.static('public'));
 // Note: Feel free to replace the example routes below with your own
 const filmsApiRoutes = require('./routes/getFilms');
 const populateRoutes = require('./routes/populate');
+const booksRouter = require('./routes/getBooks'); //
 // const userApiRoutes = require('./routes/users-api');
 // const widgetApiRoutes = require('./routes/widgets-api');
 // const usersRoutes = require('./routes/users');
@@ -44,6 +45,7 @@ const populateRoutes = require('./routes/populate');
 // app.use('/api/users', userApiRoutes);
 // app.use('/api/widgets', widgetApiRoutes);
 app.use('/api/films', filmsApiRoutes);
+app.use('/api/books', booksRouter);
 app.use('/', populateRoutes);
 // hadling middleware errors
 app.use((err, req, res, next) => {
