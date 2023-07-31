@@ -1,7 +1,7 @@
 const request = require('request');
 
 const getMovieDetails = (movieTitle) => {
-  const apiKey = '96b19b98';
+  const apiKey = process.env.OMDB_API_KEY;
   const apiUrl = `http://www.omdbapi.com/?apikey=${apiKey}&t=${encodeURIComponent(movieTitle)}`;
 
   return new Promise((resolve, reject) => {

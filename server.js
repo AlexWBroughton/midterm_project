@@ -30,7 +30,7 @@ app.use(express.static('public'));
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
-const filmsApiRoutes = require('./routes/films-api');
+const filmsApiRoutes = require('./routes/getFilms');
 const populateRoutes = require('./routes/populate');
 // const userApiRoutes = require('./routes/users-api');
 // const widgetApiRoutes = require('./routes/widgets-api');
