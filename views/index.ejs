@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!--<i class="fa-solid fa-utensils"></i>-->
+    <!--<i < class="fa-solid fa-tv"></i>-->
+    <!--<i < class="fa-solid fa-book-open"></i>-->
+    <!--<i < class="fa-solid fa-bag-shopping"></i>-->
+    <!--<i class="fa-solid fa-trash-can"></i></i>-->
+    <!--<i class="fa-solid fa-pen-to-square"></i>-->
+    <!--<i class="fa-solid fa-circle-plus"></i>i>-->
+
     <!-- need to change title when name is finalized -->
     <title>Home Page</title>
 
@@ -22,6 +30,14 @@
       integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
       crossorigin="anonymous"
     />
+    <!-- font awesome -->
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
@@ -32,11 +48,12 @@
 
     <!-- populate the lists-->
     <script src = "/scripts/client.js"></script>
+
   </head>
 
   <body>
     <!-- Bootstrap Image and text navbar-->
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light py-5">
       <a class="navbar-brand" href="#">
         <!-- placeholder logo -->
         <img
@@ -48,7 +65,7 @@
         />
         smart todo list
       </a>
-      <ul class="nav justify-content-end">
+      <!-- <ul class="nav justify-content-end">
         <li class="nav-item">
           <a class="nav-link active" href="#">Active</a>
         </li>
@@ -61,12 +78,12 @@
         <li class="nav-item">
           <a class="nav-link disabled" href="#">Disabled</a>
         </li>
-      </ul>
+      </ul> -->
     </nav>
     <!-- body input field with button -->
     <div class="card mx-auto mt-5" style="width: 50rem">
       <div class="card-body mx-auto">
-        "Todo or not todo" - Hamlet
+        <!-- "Todo or not todo" - Hamlet -->
         <div class="input-group mb-3">
           <div class="input-group-prepend">
             <input
@@ -83,14 +100,38 @@
         </div>
       </div>
     </div>
-    <!-- grid container -->
+
+    <!-- two different examples of tweet boxes -->
+    <!-- example 1 -->
+    <!-- <br>
+    <div class="card">
+      <div class="card-body">
+        This is some text within a card body.
+      </div>
+    </div>
+    <br> -->
+    <!-- example 2 -->
+    <div class="card">
+      <div class="card-header">
+        Quote
+      </div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+          <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+        </blockquote>
+      </div>
+    </div>
+    <br>
+
+    <!-- grid container
     <div class="container mt-5">
       <div class="row">
+        list 1
         <div class="col-sm">
-          <!-- list 1 -->
-          <div class="card" style="width: 18rem">
+          <div class="card" style="width: 10rem">
             <div class="card-body">
-              <h5 class="card-title" >Films</h5>
+              <h5 class="card-title mx-auto" >Films</h5>
               <ul class="list-group list-group-flush"id = "films">
                 <li class="list-group-item">Cras justo odio</li>
                 <li class="list-group-item">Dapibus ac facilisis in</li>
@@ -99,11 +140,12 @@
             </div>
           </div>
         </div>
-        <!-- list 2 -->
+
+        list 2
         <div class="col-sm">
-          <div class="card" style="width: 18rem">
+          <div class="card" style="width: 10rem">
             <div class="card-body">
-              <h5 class="card-title" >Restaurants</h5>
+              <h5 class="card-title mx-auto" >Restaurants</h5>
               <ul class="list-group list-group-flush" id = 'restaurants'>
                 <li class="list-group-item">Cras justo odio</li>
                 <li class="list-group-item">Dapibus ac facilisis in</li>
@@ -112,11 +154,12 @@
             </div>
           </div>
         </div>
-        <!-- list 3 -->
+
+        list 3
         <div class="col-sm">
-          <div class="card" style="width: 18rem">
+          <div class="card" style="width: 10rem">
             <div class="card-body">
-              <h5 class="card-title" >Books</h5>
+              <h5 class="card-title mx-auto" >Books</h5>
               <ul class="list-group list-group-flush" id = 'books'>
                 <li class="list-group-item">Cras justo odio</li>
                 <li class="list-group-item">Dapibus ac facilisis in</li>
@@ -125,11 +168,12 @@
             </div>
           </div>
         </div>
-        <!-- list 4 -->
+
+        list 4
         <div class="col-sm">
-          <div class="card" style="width: 18rem">
+          <div class="card" style="width: 10rem">
             <div class="card-body">
-              <h5 class="card-title" >Products</h5>
+              <h5 class="card-title mx-auto" >Products</h5>
               <ul class="list-group list-group-flush"id = 'products'>
                 <li class="list-group-item">Cras justo odio</li>
                 <li class="list-group-item">Dapibus ac facilisis in</li>
@@ -137,7 +181,8 @@
               </ul>
             </div>
           </div>
-        </div>
+        </div> -->
+
       </div>
     </div>
     </div>
