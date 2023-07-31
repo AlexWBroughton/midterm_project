@@ -1,31 +1,38 @@
 const express = require('express');
 const router = express.Router();
-const getFilms = require('../db/queries/database.js');
+const database = require('../db/queries/database');
 
 
 router.get('/films', (req, res) => {
-  res.send("here in films");
-  //getFilms().then((response)=>
-  //  res.send(response)
-  //);
+  database.getFilms()
+  .then((response) => res.send(response))
+  .catch((err) => {
+    console.log('in the router' + err.message);
+  });
 });
+
 router.get('/restaurants', (req, res) => {
-  res.send("here in restaurants");
-  //getFilms().then((response)=>
-  //  res.send(response)
-  //);
-});
+  database.getRestaurants()
+   .then((response) => res.send(response))
+   .catch((err) => {
+     console.log('in the router' + err.message);
+   });
+ });
+
 router.get('/books', (req, res) => {
-  res.send("here in books");
-  //getFilms().then((response)=>
-  //  res.send(response)
-  //);
+  database.getBooks()
+  .then((response) => res.send(response))
+  .catch((err) => {
+    console.log('in the router' + err.message);
+  });
 });
+
 router.get('/products', (req, res) => {
-  res.send("here in products");
-  //getFilms().then((response)=>
-  //  res.send(response)
-  //);
+  database.getProducts()
+  .then((response) => res.send(response))
+  .catch((err) => {
+    console.log('in the router' + err.message);
+  });
 });
 
 
