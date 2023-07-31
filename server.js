@@ -30,23 +30,21 @@ app.use(express.static('public'));
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
-/*const userApiRoutes = require('./routes/users-api');
-const widgetApiRoutes = require('./routes/widgets-api');
-const usersRoutes = require('./routes/users');
 const filmsApiRoutes = require('./routes/films-api');
-const restaurantApiRoutes = require('./routes/restaurants-api');
-const productsApiRoutes = require('./routes/products-api');
-const booksApiRoutes = require('./routes/books-api');
+const populateRoutes = require('./routes/populate');
+// const userApiRoutes = require('./routes/users-api');
+// const widgetApiRoutes = require('./routes/widgets-api');
+// const usersRoutes = require('./routes/users');
+
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 // Note: Endpoints that return data (eg. JSON) usually start with `/api`
-app.use('/api/users', userApiRoutes);
-app.use('/api/widgets', widgetApiRoutes);
-app.use('/api/users', userApiRoutes);
-app.use('/api/films', filmApiRoutes);
-app.use('/api/restaurants', restaurantApiRoutes);
-app.use('/users', usersRoutes);
+
+// app.use('/api/users', userApiRoutes);
+// app.use('/api/widgets', widgetApiRoutes);
+app.use('/api/films', filmsApiRoutes);
+app.use('/', populateRoutes);
 // hadling middleware errors
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -55,7 +53,6 @@ app.use((err, req, res, next) => {
 // Note: mount other resources here, using the same pattern above
 
 
-*/
 // Home page
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).

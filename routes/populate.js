@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const database = require('../db/queries/database');
 
-
-router.get('/films', (req, res) => {
-  database.getFilms()
-  .then((response) => res.send(response))
-  .catch((err) => {
-    console.log('in the router' + err.message);
-  });
-});
+//this route is now on film-api.js
+// router.get('/films', (req, res) => {
+//   database.getFilms()
+//   .then((response) => res.send(response))
+//   .catch((err) => {
+//     console.log('in the router' + err.message);
+//   });
+// });
 
 router.get('/restaurants', (req, res) => {
   database.getRestaurants()

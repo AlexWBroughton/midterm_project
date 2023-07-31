@@ -1,27 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const request = require('request');
+const database = require('../db/queries/database');
+const { getMovieDetails } = require('./omdb-api');
 
-router.get('/:id', (req, res) => {
-  const filmId = req.params.id;
-  const urlOMDb = `http://www.omdbapi.com/?i=${filmId}&apikey=60b49183`;
+// define a route to handle GET requests to /api/films path
+router.get('/', (req, res) => {
+  database.getFilms() // Fetch all films from the database
+    .then(async (films) => { // Use async/await to fetch details for each film
+      const filmDetailsPromises = films.map((film) => getMovieDetails(film.name));
+      const filmDetails = await Promise.all(filmDetailsPromises);
 
-  request(urlOMDb, (error, response, body) => {
-    if (error) {
-      // If an error occurs with the first API, use the second API
-      const urlMovieDB = `https://api.themoviedb.org/3/movie/${filmId}?api_key=8c66671783ac8112ab6ba0fd4bc31faa`;
-
-      request(urlMovieDB, (error, response, body) => {
-        if (error) {
-          res.status(500).json({ error: error.message });
-        } else {
-          res.json(JSON.parse(body));
-        }
+      const filmsWithDetails = films.map((film, index) => {
+        // Combine films data with their respective movie details
+        return {
+          ...film,
+          details: filmDetails[index],
+        };
       });
-    } else {
-      res.json(JSON.parse(body));
-    }
-  });
-});
 
+      res.json(filmsWithDetails); // Send final response with data
+    })
+    .catch((err) => {
+      console.log('Error fetching films:', err.message);
+      res.status(500).json({ error: 'Something went wrong' });
+    });
+});
+// export the router to be used in the main application
 module.exports = router;
