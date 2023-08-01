@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="/styles/main.css" />
     <link rel="stylesheet" href="/styles/layout.css" />
 
+    <script src="../public/images/testStyles.js" ></script>
+
     <script src="/vendor/jquery-3.0.0.js"></script>
     <script defer src="/scripts/app.js"></script>
     <!-- bootstrap cdn -->
@@ -75,27 +77,69 @@
       </div>
     </nav>
     <!-- body input field with button -->
-    <i class="fa-solid fa-circle-plus d-flex justify-content-end py-5 px-5 fa-2xl"></i>
+    <br>
+    <!-- need to have new item input pop out -->
+
+
+    <i class="fa-solid fa-circle-plus d-flex justify-content-end align-items-start p-5 fa-2xl" id="add-item-button">
+    </i>
+    <div id="add-item-cover"></div>
+
+    <div class="input-group mb-3"  id="add-item">
+      <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+      </div>
+    </div>
+
 <!-- tweet style to do item 1 -->
+<!--
     <div class="card mx-auto py-2" style="width:80%">
       <div class="card-header">
+           <i class="fa-solid fa-tv px-2"></i>
         Films
       </div>
       <div class="card-body " >
         <blockquote class="blockquote mb-0">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-          <footer class="blockquote-footer">Date Added: <cite title="Source Title">"date added"</cite></footer>
+          <p>Task Item 1</p>
+          <footer class="blockquote-footer py-1">Date Added: <cite title="Source Title">"date added"</cite>
+            <div class="d-flex justify-content-end">
+              <a><i class="fa-solid fa-trash-can fa-lg px-2" id="icontrash"></i></a>
+              <a><i class="fa-solid fa-pen-to-square fa-lg px-2" id="iconedit"></i></a>
+            </div>
+          </footer>
         </blockquote>
-        <div class="d-flex justify-content-end">
-          <i class="fa-solid fa-trash-can fa-lg px-1"></i></i>
-          <i class="fa-solid fa-pen-to-square fa-lg px-1"></i>
-        </div>
+
+
+      </div>
+    </div>
+    <br> -->
+
+    <a class="slide" href="#">Slide Out</a>
+
+    <div class="card mx-auto py-2" style="width:80%">
+      <div class="card-header">
+           <i class="fa-solid fa-tv px-2"></i>
+        Films
+      </div>
+      <div class="card-body " >
+        <blockquote class="blockquote mb-0">
+          <p>Task Item 1</p>
+          <footer class="blockquote-footer py-1">Date Added: <cite title="Source Title">"date added"</cite>
+            <div class="d-flex justify-content-end">
+              <a><i class="fa-solid fa-trash-can fa-lg px-2" id="icontrash"></i></a>
+              <a><i class="fa-solid fa-pen-to-square fa-lg px-2" id="iconedit"></i></a>
+            </div>
+          </footer>
+        </blockquote>
+
+
       </div>
     </div>
     <br>
-    <!-- tweet style to do item 2 -->
+<!-- =================== DONT TOUCH THE SECOND ONE JUST YET =========================== -->
     <div class="card mx-auto py-2" style="width:80%">
       <div class="card-header">
+        <i class="fa-solid fa-book-open px-2"></i>
         Books
       </div>
       <div class="card-body">
@@ -104,8 +148,8 @@
           <footer class="blockquote-footer">Date Added: <cite title="Source Title">"date added"</cite></footer>
         </blockquote>
         <div class="d-flex justify-content-end">
-          <i class="fa-solid fa-trash-can fa-lg px-1"></i></i>
-          <i class="fa-solid fa-pen-to-square fa-lg px-1"></i>
+          <a><i class="fa-solid fa-trash-can fa-lg px-2"></i></a>
+          <a><i class="fa-solid fa-pen-to-square fa-lg px-2"></i></a>
         </div>
       </div>
     </div>
