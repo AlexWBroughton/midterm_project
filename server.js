@@ -6,6 +6,7 @@ require('dotenv').config();
 const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 
 const PORT = process.env.PORT || 8080;
@@ -18,6 +19,7 @@ app.set('view engine', 'ejs');
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   '/styles',
   sassMiddleware({
@@ -30,11 +32,20 @@ app.use(express.static('public'));
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
-const filmsApiRoutes = require('./routes/getFilms');
-const populateRoutes = require('./routes/populate');
-const booksRouter = require('./routes/getBooks'); //
+
+
+//routerGet contains all the SELECT queries for the current database.
+const routerGet = require('./routes/routerGet');
+// app.use('/films', routerGet);
+// app.use('/books', routerGet);
+// app.use('/restaurants', routerGet);
+// app.use('/products', routerGet);
+// app.use('/tasks', routerGet);
+app.use('/tasks', routerGet);
+
+
 // const userApiRoutes = require('./routes/users-api');
-// const widgetApiRoutes = require('./routes/widgets-api');
+ const widgetApiRoutes = require('./routes/widgets-api');
 // const usersRoutes = require('./routes/users');
 
 
@@ -42,12 +53,12 @@ const booksRouter = require('./routes/getBooks'); //
 // Note: Feel free to replace the example routes below with your own
 // Note: Endpoints that return data (eg. JSON) usually start with `/api`
 
-// app.use('/api/users', userApiRoutes);
-// app.use('/api/widgets', widgetApiRoutes);
-app.use('/api/films', filmsApiRoutes);
-app.use('/api/books', booksRouter);
-app.use('/', populateRoutes);
-// hadling middleware errors
+ //app.use('/api/users', userApiRoutes);
+ app.use('/api/widgets', widgetApiRoutes);
+// app.use('/api/films', filmsApiRoutes);
+// app.use('/api/books', booksRouter);
+
+// handling middleware errors
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
@@ -62,13 +73,11 @@ app.use((err, req, res, next) => {
 
 //populate the lists
 
-const populateRoute  = require("./routes/populate");
-app.use("/",populateRoute);
-
-
 app.get('/', (req, res) => {
   res.render('index');
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
