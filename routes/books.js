@@ -1,9 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { getBookDetails } = require('./books-api'); //
+const { getBookDetails } = require('./api'); //
+const database = require('../db/queries/database');
 
-// Define a route to handle GET requests to /api/books path
-router.get('/', (req, res) => {
+// Define a route to handle GET requests to /books path
+router.get('/books', (req, res) => {
+    database.getBooks()
+    .then((response) => res.send(response))
+    .catch((err) => {
+      console.log('in the router' + err.message);
+    });
+
   // Extract the book title from the query parameters
   const bookTitle = req.query.title;
 

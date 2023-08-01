@@ -11,7 +11,7 @@ const database = require('../db/queries/database');
 //   });
 // });
 
-router.get('/restaurants', (req, res) => {
+router.get('/api/restaurants', (req, res) => {
   database.getRestaurants()
    .then((response) => res.send(response))
    .catch((err) => {
@@ -19,15 +19,9 @@ router.get('/restaurants', (req, res) => {
    });
  });
 
-router.get('/books', (req, res) => {
-  database.getBooks()
-  .then((response) => res.send(response))
-  .catch((err) => {
-    console.log('in the router' + err.message);
-  });
-});
 
-router.get('/products', (req, res) => {
+
+router.get('/api/products', (req, res) => {
   database.getProducts()
   .then((response) => res.send(response))
   .catch((err) => {
