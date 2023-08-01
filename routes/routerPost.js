@@ -7,7 +7,7 @@ const bodyParser = require('body-parser') //
 ///it wil pick up the path of /tasks/
 router.post('/', (req, res) => {
   // Extract the task title from the query parameters
-  const task = JSON.stringify(Object.values(req.body));
+  const task = Object.values(req.body);
 
 
 
@@ -21,8 +21,8 @@ router.post('/', (req, res) => {
 // filter through apis (figure out first)
 
 //pass the task to Wolfram so that Wolfram can categorize the task.
-    getRestaurant(task).then((response)=>{
-      console.log(response);
+    getBookDetails(task).then((response)=>{
+      console.log("response =" ,response);
       res.send(response);
     });
   });
