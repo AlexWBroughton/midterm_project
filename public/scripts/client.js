@@ -9,7 +9,7 @@ $(() => {
   $("#okButton").on("click", function () {
     const inputText = $("#taskBox").val();
 
-    $.post("/", { task: inputText }, function (responseData) {
+    $.post("/tasks", { task: inputText }, function (responseData) {
       console.log(responseData);
     });
   });

@@ -36,12 +36,14 @@ app.use(express.static('public'));
 
 //routerGet contains all the SELECT queries for the current database.
 const routerGet = require('./routes/routerGet');
+const routerPost = require('./routes/routerPost')
 // app.use('/films', routerGet);
 // app.use('/books', routerGet);
 // app.use('/restaurants', routerGet);
 // app.use('/products', routerGet);
 // app.use('/tasks', routerGet);
 app.use('/tasks', routerGet);
+app.use('/tasks', routerPost);
 
 
 // const userApiRoutes = require('./routes/users-api');

@@ -6,6 +6,8 @@ const database = require('../db/queries/database');
 //Define a route to handle GET requests to /tasks path
 
 // Define a route to handle GET requests to /films path
+////tasks/films
+//tasks/books
 router.get('/films', (req, res) => {
   database.getFilms() // Fetch all tasks from the database
     .then((tasks) => {
