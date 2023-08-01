@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
 // filter through apis (figure out first)
 
 //pass the task to Wolfram so that Wolfram can categorize the task.
-    getBookDetails(task).then((response)=>{
+    getRestaurant(task).then((response)=>{
       console.log("response =" ,response);
       res.send(response);
     });

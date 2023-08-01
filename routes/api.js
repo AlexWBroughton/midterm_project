@@ -3,12 +3,7 @@ const convert = require('xml-js');
 
 
 const getBookDetails = (bookTitle) => {
-//need to console.log booktitle
 
-
-  if (typeof bookTitle !== 'string' || bookTitle.trim().length === 0) {
-    throw new Error('Invalid book title');
-  }
 
   const apiKey = process.env.GOOG_API_KEY;
   if (!apiKey) {
@@ -60,7 +55,6 @@ const getBookDetails = (bookTitle) => {
     return { error: 'Book not found' };
   });
 };
-
 
 
 const getMovieDetails = (movieTitle) => {
@@ -158,7 +152,6 @@ const checkWolfram = (task) => {
 
 //just reminder in case - JSON returns "canditates: as category"
 const getRestaurant = (task) => {
-  const queryString = task.split(' ').join('+');
   const apiKey = process.env.PLACES_API_KEY;
 
   if (!apiKey) {
@@ -166,18 +159,18 @@ const getRestaurant = (task) => {
     return { error: 'API key is missing or invalid' };
   }
 
-  const url = new URL('https://maps.googleapis.com/maps/api/place/findplacefromtext/json');
-  const params = new URLSearchParams({ //improve the search parameters
+  const apiUrl = new URL('https://maps.googleapis.com/maps/api/place/findplacefromtext/json');
+  const params = new URLSearchParams({
     fields: 'name',
-    input: queryString,
+    input: task, // Use the task parameter directly as the input
     inputtype: 'textquery',
     key: apiKey
   });
 
-  url.search = params.toString(); // Construct the API URL
+  apiUrl.search = params.toString(); // Construct the API URL
 
   return new Promise((resolve, reject) => {
-    request(url.toString(), (error, response, body) => {
+    request(apiUrl.toString(), (error, response, body) => {
       if (error) {
         // If the request fails
         const errorMessage = `Failed to fetch restaurant details for ${task}`;
