@@ -39,10 +39,10 @@ body {
 #add-item-cover {
   position: absolute;
   right: 0px;
-  top: 7.2rem;
+  top: 114px;
   z-index: 0;
   width:4%;
-  height:5%;
+  height:3rem;
   background-color: lightblue;
   border-radius: 4%;
 }
@@ -50,44 +50,14 @@ body {
 #add-item-button {
   position: absolute;
   right: 0px;
-  top: 5.5rem;
+  top: 87px;
   z-index: 1;
 }
 
-#icontrash:hover {
+#iconTrash:hover {
   color: red;
 }
 
-#iconedit:hover {
+#iconEdit:hover {
   color:blue;
-}
-
-
-// -----------------
-
-a {
-  text-decoration: none;
-  background: #eee;
-  padding: .5em;
-  margin-bottom: 1em;
-  display: inline-block;
-}
-
-.box {
-  display: block;
-  background: lightblue;
-  margin-bottom: 1em;
-}
-
-#fade-in {
-  height: 150px;
-  width: 1px;
-  opacity: 0;
-  transition: all .75s ease;
-}
-
-#fade-in.show {
-  opacity: 1;
-  height: 150px;
-  width: 500px;
 }
