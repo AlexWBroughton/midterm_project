@@ -43,14 +43,15 @@ const updateTask = async (taskId, name, date, category_id, completed) => {
 
     await db.query('COMMIT'); // Commit the transaction
 
-    console.log(result);
-    return result;
+    console.log(`Rows updated: ${result.rowCount}`);
+    return result.rowCount;
   } catch (err) {
     await db.query('ROLLBACK'); // Rollback the transaction if an error occurs
     console.error(err.message);
     throw err;
   }
 };
+
 
 
 
