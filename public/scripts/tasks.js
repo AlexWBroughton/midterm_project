@@ -98,7 +98,37 @@ $(() => {
     }
   };
 
+  $(document).ready(function(){
+    $("#utensils-icon").mouseover(function(){
+        $(this).css('color', 'red');
+    }).mouseout(function(){
+        $(this).css('color', ''); // This will reset the color to its original state when the mouse leaves the icon
+    });
 
+    $("#tv-icon").mouseover(function(){
+        $(this).css('color', 'blue');
+    }).mouseout(function(){
+        $(this).css('color', '');
+    });
+
+    $("#book-icon").mouseover(function(){
+        $(this).css('color', 'green');
+    }).mouseout(function(){
+        $(this).css('color', '');
+    });
+
+    $("#shopping-icon").mouseover(function(){
+        $(this).css('color', 'orange');
+    }).mouseout(function(){
+        $(this).css('color', '');
+    });
+
+    $("#otter-icon").mouseover(function(){
+      $(this).css('color', 'brown'); // change this to whatever color you want
+  }).mouseout(function(){
+      $(this).css('color', ''); // This will reset the color to its original state when the mouse leaves the icon');
+  });
+});
 
   //a non trivial icon for task box
   const getIcon = function(category) {
