@@ -1,6 +1,6 @@
 $(() => {
   //populates the UI with tasks ordered by date
-  $.get("/tasks", function (response) {
+  $.get("/tasks", function(response) {
 
 
     for (let i = 0; i < 3; i++) {
@@ -11,20 +11,20 @@ $(() => {
           currentTask.name_of_todo,
           updateTaskTitle(currentTask.category),
           convertDate(currentTask.date_added)
-          )
-        );
+        )
+      );
     }
   });
 
 
   //dynamic task creation
-  const createTask = function (taskID, task, category, date_added) {
+  const createTask = function(taskID, task, category, date_added) {
     const newDate = new Date(date_added);
     console.log("category in createTask", category);
     const iconClass = getIcon(category);
     // console.log("get icon(category)", getIcon(category));
 
-    const newDate = new Date(date_added);
+    // const newDate = new Date(date_added);
     // console.log(newDate);
     // console.log(date_added);
 
@@ -54,47 +54,47 @@ $(() => {
   };
 
   //a non trivial change of task box title
-  const updateTaskTitle = function (category) {
+  const updateTaskTitle = function(category) {
     // category = category.toLowerCase();
     switch (category) {
-      case "buy":
-      case "products":
-        return "Products";
-      case "eat":
-      case "restaurants":
-        return "Restaurants";
-      case "read":
-      case "books":
-        return "Books";
-      case "watch":
-      case "films":
-        return "Films";
-        //add more cases if needed here
-      default:
-        return "Other";
+    case "buy":
+    case "products":
+      return "Products";
+    case "eat":
+    case "restaurants":
+      return "Restaurants";
+    case "read":
+    case "books":
+      return "Books";
+    case "watch":
+    case "films":
+      return "Films";
+      //add more cases if needed here
+    default:
+      return "Other";
     }
   };
 
   //check category_id
-  const checkCategoryID = function (category) {
+  const checkCategoryID = function(category) {
     category = category.toLowerCase();
     switch (category) {
-      case "buy":
-      case "products":
-        return 4;
-      case "eat":
-      case "restaurants":
-        return 1;
-      case "read":
-      case "books":
-        return 3;
-      case "watch":
-      case "films":
-      case "series":
-        return 2;
-        //add more cases if needed here
-      default:
-        return 5;
+    case "buy":
+    case "products":
+      return 4;
+    case "eat":
+    case "restaurants":
+      return 1;
+    case "read":
+    case "books":
+      return 3;
+    case "watch":
+    case "films":
+    case "series":
+      return 2;
+      //add more cases if needed here
+    default:
+      return 5;
     }
   };
 
@@ -183,17 +183,16 @@ $(() => {
       $("#popup").remove();
     });
 
-    $("#to-do-container").off("click", "#submitBtn").on("click", "#submitBtn", function () {
-      if (!$('#taskName').val()|| !isNaN($('#taskName').val())){
+    $("#to-do-container").off("click", "#submitBtn").on("click", "#submitBtn", function() {
+      if (!$('#taskName').val() || !isNaN($('#taskName').val())) {
         alert("Please enter a valid task name");
-      }else {
-        if (!$('#date_added').val() || !isValidDateFormat($('#date_added').val())){
+      } else {
+        if (!$('#date_added').val() || !isValidDateFormat($('#date_added').val())) {
           alert("Please enter a valid date(YYYY-MM-DD)");
         } else {
-          if (!$('#category').val() || !isNaN($('#category').val())){
+          if (!$('#category').val() || !isNaN($('#category').val())) {
             alert("Please enter a valid category");
-          }
-          else{
+          } else {
             //happy path - gather the information and populate our task with it
             renderTask(
               createTask(
@@ -239,7 +238,7 @@ $(() => {
     const dateRegEx = /^\d{4}-\d{2}-\d{2}$/;
 
     // Check if the input matches the date format
-    if(!dateRegEx.test(input)) {
+    if (!dateRegEx.test(input)) {
       return false;
     }
 
