@@ -4,7 +4,7 @@ const db = require('../connection');
 const getTasks = () => {
   console.log('here in getTASKS');
   return db.query(
-    `SELECT *
+    `SELECT todos.*,categories.category
     FROM todos
     JOIN categories ON todos.category_id = categories.id
     ORDER BY todos.date_added
@@ -18,6 +18,41 @@ const getTasks = () => {
       console.error(err.message);
     });
 };
+
+
+
+
+const updateTask = async (taskId, name, date, category_id, completed) => {
+  console.log('here in updateTASK');
+
+  try {
+    await db.query('BEGIN'); // Start a transaction
+
+    // Drop the foreign key constraint
+    await db.query('ALTER TABLE todos DROP CONSTRAINT todos_category_id_fkey');
+
+    // Execute the UPDATE statement
+    const result = await db.query(
+      `UPDATE todos
+       SET name_of_todo = $1, date_added = $2, category_id = $3, completed = $4
+       WHERE id = $5`, [name, date, category_id, completed, taskId]
+    );
+
+    // Add the foreign key constraint back
+    await db.query('ALTER TABLE todos ADD CONSTRAINT todos_category_id_fkey FOREIGN KEY (category_id) REFERENCES categories(id)');
+
+    await db.query('COMMIT'); // Commit the transaction
+
+    console.log(result);
+    return result;
+  } catch (err) {
+    await db.query('ROLLBACK'); // Rollback the transaction if an error occurs
+    console.error(err.message);
+    throw err;
+  }
+};
+
+
 
 const getFilms = () => {
   console.log('here in getFILMS');
@@ -108,4 +143,4 @@ const getProducts = () => {
       });
   };
 
-module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask };
+  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask };

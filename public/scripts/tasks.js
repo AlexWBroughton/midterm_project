@@ -1,6 +1,8 @@
 $(() => {
   //populates the UI with tasks ordered by date
   $.get("/tasks", function (response) {
+
+
     for (let i = 0; i < 3; i++) {
       let currentTask = response[i];
       renderTask(
@@ -8,14 +10,15 @@ $(() => {
           currentTask.id,
           currentTask.name_of_todo,
           updateTaskTitle(currentTask.category),
-          currentTask.date_added
-        )
-      );
+          convertDate(currentTask.date_added)
+          )
+        );
     }
   });
 
   //dynamic task creation
   const createTask = function (taskID, task, category, date_added) {
+    const newDate = new Date(date_added);
     console.log("category in createTask", category);
     const iconClass = getIcon(category);
     console.log("get icon(category)", getIcon(category));
@@ -48,19 +51,50 @@ $(() => {
 
   //a non trivial change of task box title
   const updateTaskTitle = function (category) {
+    // category = category.toLowerCase();
     switch (category) {
       case "buy":
+      case "products":
         return "Products";
       case "eat":
+      case "restaurants":
         return "Restaurants";
       case "read":
+      case "books":
         return "Books";
       case "watch":
+      case "films":
         return "Films";
+        //add more cases if needed here
       default:
         return "Other";
     }
   };
+
+  //check category_id
+  const checkCategoryID = function (category) {
+    category = category.toLowerCase();
+    switch (category) {
+      case "buy":
+      case "products":
+        return 4;
+      case "eat":
+      case "restaurants":
+        return 1;
+      case "read":
+      case "books":
+        return 3;
+      case "watch":
+      case "films":
+      case "series":
+        return 2;
+        //add more cases if needed here
+      default:
+        return 5;
+    }
+  };
+
+
 
   //a non trivial icon for task box
   const getIcon = function (category) {
@@ -146,14 +180,14 @@ $(() => {
     });
 
     $("#to-do-container").off("click", "#submitBtn").on("click", "#submitBtn", function () {
-      if (!$('#taskName').val()){
-        alert("Please enter a task name");
+      if (!$('#taskName').val()|| !isNaN($('#taskName').val())){
+        alert("Please enter a valid task name");
       }else {
         if (!$('#date_added').val() || !isValidDateFormat($('#date_added').val())){
           alert("Please enter a valid date(YYYY-MM-DD)");
         } else {
-          if (!$('#category').val()){
-            alert("Please enter a category");
+          if (!$('#category').val() || !isNaN($('#category').val())){
+            alert("Please enter a valid category");
           }
           else{
             //happy path - gather the information and populate our task with it
@@ -165,22 +199,55 @@ $(() => {
                 $('#date_added').val()
               )
             );
-            $('#popup').remove();
-            $card.remove();
+            //call router put
+
+
+            $.ajax({
+              type: 'PUT',
+              url: `/tasks/${$card.attr('id')}`,
+              data: JSON.stringify({
+                id: $card.attr('id'),
+                name_of_todo: $('#taskName').val(),
+                date_added: $('#date_added').val(),
+                category_id: checkCategoryID($('#category').val()),
+                completed: 'FALSE'
+              }),
+              dataType: "json",
+              contentType: "application/json",
+              success: function(response) {
+                console.log('Update success: ', response);
+                $('#popup').remove();
+                $card.remove();
+              },
+              error: function(error) {
+                console.log('Update error: ', error);
+              }
+            });
           }
         }
       }
     });
   });
 
-
   //helper function for date checking
   function isValidDateFormat(input) {
-    try {
-        const date = new Date(input);
-        return !isNaN(date.getTime());
-    } catch (error) {
-        return false;
+    // Regular expression to match the date format 'yyyy-mm-dd'
+    const dateRegEx = /^\d{4}-\d{2}-\d{2}$/;
+
+    // Check if the input matches the date format
+    if(!dateRegEx.test(input)) {
+      return false;
     }
-}
+
+    // Check if the date is valid
+    const date = new Date(input);
+    return !isNaN(date.getTime());
+  }
+
+  //date and time conversion
+  function convertDate(date_added) {
+    newDate = new Date(date_added);
+    return newDate.toDateString();
+  }
+
 });
