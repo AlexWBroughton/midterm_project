@@ -124,7 +124,7 @@ $(() => {
     });
 
     $("#otter-icon").mouseover(function(){
-      $(this).css('color', 'brown'); // change this to whatever color you want
+      $(this).css('color', 'purple'); // change this to whatever color you want
   }).mouseout(function(){
       $(this).css('color', ''); // This will reset the color to its original state when the mouse leaves the icon');
   });
