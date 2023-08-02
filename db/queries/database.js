@@ -90,6 +90,22 @@ const getProducts = () => {
     .catch((err) => {
       console.error(err.message);
     });
-};
+  };
 
-module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks };
+  const deleteTask = (taskID) => {
+    return db.query(
+      `DELETE FROM todos
+      WHERE id=$1;`,
+      [taskID]
+    )
+      .then((result) => {
+        console.log(`Task with ID ${taskID} deleted.`);
+        return result.rowCount > 0; // Return true if the task was deleted successfully.
+      })
+      .catch((err) => {
+        console.error(`Error deleting task with ID ${taskID}: ${err.message}`);
+        return false; // Return false if there was an error deleting the task.
+      });
+  };
+
+module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask };

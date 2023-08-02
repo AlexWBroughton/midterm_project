@@ -36,18 +36,17 @@ app.use(express.static('public'));
 
 //routerGet contains all the SELECT queries for the current database.
 const routerGet = require('./routes/routerGet');
-const routerPost = require('./routes/routerPost')
-// app.use('/films', routerGet);
-// app.use('/books', routerGet);
-// app.use('/restaurants', routerGet);
-// app.use('/products', routerGet);
-// app.use('/tasks', routerGet);
+const routerPost = require('./routes/routerPost');
+const routerDelete = require('./routes/routerDelete');
+const routerPut = require('./routes/routerPut');
+
 app.use('/tasks', routerGet);
 app.use('/tasks', routerPost);
+app.use('/tasks', routerDelete);
+app.use('/tasks', routerPut);
 
 
 // const userApiRoutes = require('./routes/users-api');
- const widgetApiRoutes = require('./routes/widgets-api');
 // const usersRoutes = require('./routes/users');
 
 
@@ -56,7 +55,6 @@ app.use('/tasks', routerPost);
 // Note: Endpoints that return data (eg. JSON) usually start with `/api`
 
  //app.use('/api/users', userApiRoutes);
- app.use('/api/widgets', widgetApiRoutes);
 // app.use('/api/films', filmsApiRoutes);
 // app.use('/api/books', booksRouter);
 
@@ -73,7 +71,6 @@ app.use((err, req, res, next) => {
 // Separate them into separate routes files (see above).
 
 
-//populate the lists
 
 app.get('/', (req, res) => {
   res.render('index');
