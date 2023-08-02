@@ -30,7 +30,7 @@ const updateTask = async (taskId, name, date, category_id, completed) => {
 
     // Drop the foreign key constraint
     await db.query('ALTER TABLE todos DROP CONSTRAINT todos_category_id_fkey');
-
+    console.log(`Updating task with taskId=${taskId}, name=${name}, date=${date}, category_id=${category_id}, completed=${completed}`);
     // Execute the UPDATE statement
     const result = await db.query(
       `UPDATE todos
@@ -43,14 +43,15 @@ const updateTask = async (taskId, name, date, category_id, completed) => {
 
     await db.query('COMMIT'); // Commit the transaction
 
-    console.log(result);
-    return result;
+    console.log(`Rows updated: ${result.rowCount}`);
+    return result.rowCount;
   } catch (err) {
     await db.query('ROLLBACK'); // Rollback the transaction if an error occurs
     console.error(err.message);
     throw err;
   }
 };
+
 
 
 
