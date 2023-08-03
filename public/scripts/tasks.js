@@ -32,17 +32,17 @@ $(() => {
       if (response.length < 3) {
         for (let i = 0; i < response.length; i++) {
           let currentTask = response[i];
-            if (!currentTask.completed){
-            renderTask(
-              createTask(
-                currentTask.id,
-                currentTask.name_of_todo,
-                updateTaskTitle(currentTask.category),
-                convertDate(currentTask.date_added)
-               )
-             );
-            }
-         }
+          renderTask(
+            createTask(
+              currentTask.id,
+              currentTask.name_of_todo,
+              updateTaskTitle(currentTask.category),
+              convertDate(currentTask.date_added),
+              currentTask.completed,
+              currentTask.date_completed;
+            )
+          );
+        }
       } else {
         for (let i = 0; i < 3; i++) {
           let currentTask = response[i];
