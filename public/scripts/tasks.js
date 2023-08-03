@@ -22,7 +22,7 @@ $(() => {
     return newDate.toDateString();
   }
   //prepends tasks onto UI
-  const renderTask = function (task) {
+  const renderTask = function (task,completed) {
     $("#to-do-container").prepend(task);
   };
 
@@ -37,9 +37,7 @@ $(() => {
               currentTask.id,
               currentTask.name_of_todo,
               updateTaskTitle(currentTask.category),
-              convertDate(currentTask.date_added),
-              currentTask.completed,
-              currentTask.date_completed;
+              convertDate(currentTask.date_added)
             )
           );
         }
@@ -51,7 +49,7 @@ $(() => {
               currentTask.id,
               currentTask.name_of_todo,
               updateTaskTitle(currentTask.category),
-              convertDate(currentTask.date_added)
+              convertDate(currentTask.date_added),
             )
           );
         }
@@ -102,13 +100,7 @@ $(() => {
     }
   };
 
-<<<<<<< HEAD
   //a non trivial icon for task box helper function
-=======
-
-
-  //a non trivial icon for task box
->>>>>>> 8c1a1d0cd6d2479dcbea21a736983bb5b0679d72
   const getIcon = function (category) {
     switch (category) {
       case "Products":
@@ -131,6 +123,7 @@ $(() => {
     const newDate = new Date(date_added);
     console.log("category in createTask", category);
     const iconClass = getIcon(category);
+
 
     const $task = $(`
     <div class="card mx-auto py-1 " style="width:80%; margin-bottom: 15px" id=${taskID}>
@@ -163,74 +156,81 @@ $(() => {
   let originalColor; // Variable to store original color
 
   const completeTaskPopupBox = `
- <div id="completeTaskPopup" class="popup" style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; display: flex; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.5);">
-   <div class="popup-content p-3 border rounded bg-white shadow-lg position-relative" style="max-width: 400px; width: 90%;">
-     <span id="closeCompleteTaskPopup" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 25px; color: red;">&times;</span>
-     <h2 class="text-center my-3">Task Completed!</h2>
-     <div class="d-flex justify-content-center mt-3">
-       <button id="closeCompleteTaskBtn" class="btn btn-primary">This task will be available on your completed tasks above.</button>
-     </div>
-   </div>
- </div>`;
-  $(document).on("change", "#completed", function () {
-    // If the checkbox is checked
-    if ($(this).is(":checked")) {
-      // Store the original color
-      originalColor = $(this).closest(".card").css("backgroundColor");
-      // If the popup is not already displayed, show it
-      if ($("#completeTaskPopup").length === 0) {
-        $("body").append(completeTaskPopupBox);
-      }
-    } else {
-      // If the checkbox is unchecked, reset the color
-      $(this).closest(".card").find(".completed-on").remove
-      $(this).closest(".card").animate(
-        {
-          backgroundColor: originalColor, // Back to the original color
-        },
-        3000
-      ); // Animation duration in milliseconds
-    }
-  });
-  $(document).on(
-    "click",
-    "#closeCompleteTaskBtn, #closeCompleteTaskPopup",
-    function () {
-      $("#completeTaskPopup").remove();
-      // Check if the checkbox is checked and then animate
-      if ($("#completed").is(":checked")) {
-        // Animate the color of the card
-        $("#completed").closest(".card").animate(
-          {
-            backgroundColor: "#c3e6cb", // The color you want
-          },
-          2000
-        ); // Animation duration in milliseconds
+  <div id="completeTaskPopup" class="popup" style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; display: flex; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.5);">
+    <div class="popup-content p-3 border rounded bg-white shadow-lg position-relative" style="max-width: 400px; width: 90%;">
+      <span id="closeCompleteTaskPopup" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 25px; color: red;">&times;</span>
+      <h2 class="text-center my-3">Task Completed!</h2>
+      <div class="d-flex justify-content-center mt-3">
+        <button id="closeCompleteTaskBtn" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  </div>`;
 
-        //do the routerPUT
+ $(document).on("change", "#completed", function () {
+   // Remove previous event handler
+   $(document).off("click", "#closeCompleteTaskBtn, #closeCompleteTaskPopup");
 
-        let formattedDate = new Date().toISOString().split('T')[0];
-        let $card = $("#completed").closest(".card");
-        $.ajax({
-          type: "PUT",
-          url: `/tasks/completed`,
-          data: JSON.stringify({
-            id: $card.attr("id"),
-            completed: "TRUE",
-            date_completed: formattedDate
-          }),
-          dataType: "json",
-          contentType: "application/json",
-          success: function (response) {
-            console.log("Update success: ", response);
-            $card.find('#footer-date').append(`<div class = "completed-on"> Completed On: ${formattedDate} </div>`);
-          },
-          error: function (error) {
-            console.log("Update error: ", error);
-          },
-      })
-    }
-});
+   // If the checkbox is checked
+   if ($(this).is(":checked")) {
+     // Store the original color
+     originalColor = $(this).closest(".card").css("backgroundColor");
+     // If the popup is not already displayed, show it
+     if ($("#completeTaskPopup").length === 0) {
+       $("body").append(completeTaskPopupBox);
+     }
+   } else {
+     // If the checkbox is unchecked, reset the color
+     $(this).closest(".card").find(".completed-on").remove();
+     $(this).closest(".card").animate(
+       {
+         backgroundColor: originalColor, // Back to the original color
+       },
+       3000
+     ); // Animation duration in milliseconds
+   }
+
+   // Attach the event handlers again
+   $(document).on(
+     "click",
+     "#closeCompleteTaskBtn, #closeCompleteTaskPopup",
+     function () {
+       $("#completeTaskPopup").remove();
+       // Check if the checkbox is checked and then animate
+       if ($("#completed").is(":checked")) {
+         // Animate the color of the card
+         $("#completed").closest(".card").animate(
+           {
+             backgroundColor: "#c3e6cb", // The color you want
+           },
+           2000
+         ); // Animation duration in milliseconds
+
+         // Do the routerPUT
+
+         let formattedDate = new Date().toISOString().split('T')[0];
+         let $card = $("#completed").closest(".card");
+         $.ajax({
+           type: "PUT",
+           url: `/tasks/completed`,
+           data: JSON.stringify({
+             id: $card.attr("id"),
+             completed: "TRUE",
+             date_completed: formattedDate
+           }),
+           dataType: "json",
+           contentType: "application/json",
+           success: function (response) {
+             console.log("Update success: ", response);
+             $card.find('#footer-date').append(`<div class = "completed-on"> Completed On: ${formattedDate} </div>`);
+           },
+           error: function (error) {
+             console.log("Update error: ", error);
+           },
+         });
+       }
+     }
+   );
+ });
 // Remove the completion date from the footer-date element
 
   ///////////////////////////////////////////////////////
@@ -347,7 +347,7 @@ $(() => {
           currentTask.id,
           currentTask.name_of_todo,
           updateTaskTitle(currentTask.category),
-          convertDate(currentTask.date_added)
+          convertDate(currentTask.date_added),
         )
       );
     }
