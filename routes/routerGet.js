@@ -31,6 +31,7 @@ router.get('/books', (req, res) => {
     });
 });
 router.get('/restaurants', (req, res) => {
+  console.log('here in restaurants');
   database.getRestaurants() // Fetch all tasks from the database
     .then((tasks) => {
       console.log(tasks);
