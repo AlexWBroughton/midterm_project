@@ -102,7 +102,13 @@ $(() => {
     }
   };
 
+<<<<<<< HEAD
   //a non trivial icon for task box helper function
+=======
+
+
+  //a non trivial icon for task box
+>>>>>>> 8c1a1d0cd6d2479dcbea21a736983bb5b0679d72
   const getIcon = function (category) {
     switch (category) {
       case "Products":
