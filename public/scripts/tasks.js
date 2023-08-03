@@ -95,6 +95,8 @@ $(() => {
     }
   };
 
+
+
   //a non trivial icon for task box
   const getIcon = function (category) {
     switch (category) {
