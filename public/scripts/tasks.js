@@ -117,22 +117,8 @@ $(() => {
     }
   };
 
-  //TASK MANAGEMENT FUNCTIONS
 
-  //populates the UI with tasks ordered by date
-  $.get("/tasks", function (response) {
-    for (let i = 0; i < 3; i++) {
-      let currentTask = response[i];
-      renderTask(
-        createTask(
-          currentTask.id,
-          currentTask.name_of_todo,
-          updateTaskTitle(currentTask.category),
-          convertDate(currentTask.date_added)
-        )
-      );
-    }
-  });
+  //TASK MANAGEMENT FUNCTIONS
 
   //dynamic task creation
   const createTask = function (taskID, task, category, date_added) {
@@ -151,6 +137,14 @@ $(() => {
           <div class="justify-content-start text-muted" id="footer-date">Date Added: <span title="Source Title">${date_added}</span>
           </div>
           <div id="footer-icons">
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value=""          id="completed">
+              <label class="form-check-label" for="flexCheckIndeterminate">
+                Is your to-do complete?  Check YES!
+              </label>
+            </div>
+
             <a><i class="fa-solid fa-trash-can fa-lg px-2 "></i></a>
             <a><i class="fa-solid fa-pen-to-square fa-lg px-2"></i></a>
           </div>
@@ -159,8 +153,9 @@ $(() => {
     `);
     return $task;
   };
-   //edits the task
-   $("#to-do-container").on("click", ".fa-pen-to-square", function () {
+
+  //edits the task
+  $("#to-do-container").on("click", ".fa-pen-to-square", function () {
     $("#popup").remove();
     const $card = $(this).closest(".card.mx-auto.py-1");
     //Create the popup box and add it to the card
@@ -259,6 +254,21 @@ $(() => {
           alert("Error deleting task. Please try again later.");
         },
       });
+    }
+  });
+
+  //populates the UI with tasks ordered by date
+  $.get("/tasks", function (response) {
+    for (let i = 0; i < 3; i++) {
+      let currentTask = response[i];
+      renderTask(
+        createTask(
+          currentTask.id,
+          currentTask.name_of_todo,
+          updateTaskTitle(currentTask.category),
+          convertDate(currentTask.date_added)
+        )
+      );
     }
   });
 
