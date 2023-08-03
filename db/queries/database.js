@@ -58,7 +58,7 @@ const updateTask = async (taskId, name, date, category_id, completed) => {
 const getFilms = () => {
   console.log('here in getFILMS');
   return db.query(
-    `SELECT *
+    `SELECT todos.*,categories.category
     FROM todos
     JOIN categories ON todos.category_id = categories.id
     WHERE todos.category_id = 2
@@ -75,8 +75,9 @@ const getFilms = () => {
 };
 
 const getRestaurants = () => {
+  console.log('here in getRestaurants');
   return db.query(
-    `SELECT *
+    `SELECT todos.*,categories.category
     FROM todos
     JOIN categories ON todos.category_id = categories.id
     WHERE todos.category_id = 1
@@ -94,7 +95,7 @@ const getRestaurants = () => {
 
 const getBooks = () => {
   return db.query(
-    `SELECT *
+    `SELECT todos.*,categories.category
     FROM todos
     JOIN categories ON todos.category_id = categories.id
     WHERE todos.category_id = 3
@@ -112,7 +113,7 @@ const getBooks = () => {
 
 const getProducts = () => {
   return db.query(
-    `SELECT *
+    `SELECT todos.*,categories.category
     FROM todos
     JOIN categories ON todos.category_id = categories.id
     WHERE todos.category_id = 4

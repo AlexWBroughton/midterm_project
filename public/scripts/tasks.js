@@ -1,8 +1,6 @@
 $(() => {
   //populates the UI with tasks ordered by date
-  $.get("/tasks", function(response) {
-
-
+  $.get("/tasks", function (response) {
     for (let i = 0; i < 3; i++) {
       let currentTask = response[i];
       renderTask(
@@ -16,9 +14,8 @@ $(() => {
     }
   });
 
-
   //dynamic task creation
-  const createTask = function(taskID, task, category, date_added) {
+  const createTask = function (taskID, task, category, date_added) {
     const newDate = new Date(date_added);
     console.log("category in createTask", category);
     const iconClass = getIcon(category);
@@ -49,114 +46,125 @@ $(() => {
     return $task;
   };
 
-  const renderTask = function(task) {
+  const renderTask = function (task) {
     $("#to-do-container").prepend(task);
   };
 
   //a non trivial change of task box title
-  const updateTaskTitle = function(category) {
+  const updateTaskTitle = function (category) {
     // category = category.toLowerCase();
     switch (category) {
-    case "buy":
-    case "products":
-      return "Products";
-    case "eat":
-    case "restaurants":
-      return "Restaurants";
-    case "read":
-    case "books":
-      return "Books";
-    case "watch":
-    case "films":
-      return "Films";
+      case "buy":
+      case "products":
+        return "Products";
+      case "eat":
+      case "restaurants":
+        return "Restaurants";
+      case "read":
+      case "books":
+        return "Books";
+      case "watch":
+      case "films":
+        return "Films";
       //add more cases if needed here
-    default:
-      return "Other";
+      default:
+        return "Other";
     }
   };
 
   //check category_id
-  const checkCategoryID = function(category) {
+  const checkCategoryID = function (category) {
     category = category.toLowerCase();
     switch (category) {
-    case "buy":
-    case "products":
-      return 4;
-    case "eat":
-    case "restaurants":
-      return 1;
-    case "read":
-    case "books":
-      return 3;
-    case "watch":
-    case "films":
-    case "series":
-      return 2;
+      case "buy":
+      case "products":
+        return 4;
+      case "eat":
+      case "restaurants":
+        return 1;
+      case "read":
+      case "books":
+        return 3;
+      case "watch":
+      case "films":
+      case "series":
+        return 2;
       //add more cases if needed here
-    default:
-      return 5;
+      default:
+        return 5;
     }
   };
 
-  $(document).ready(function(){
-    $("#utensils-icon").mouseover(function(){
-        $(this).css('color', 'red');
-    }).mouseout(function(){
-        $(this).css('color', ''); // This will reset the color to its original state when the mouse leaves the icon
-    });
 
-    $("#tv-icon").mouseover(function(){
-        $(this).css('color', 'blue');
-    }).mouseout(function(){
-        $(this).css('color', '');
-    });
-
-    $("#book-icon").mouseover(function(){
-        $(this).css('color', 'green');
-    }).mouseout(function(){
-        $(this).css('color', '');
-    });
-
-    $("#shopping-icon").mouseover(function(){
-        $(this).css('color', 'orange');
-    }).mouseout(function(){
-        $(this).css('color', '');
-    });
-
-    $("#otter-icon").mouseover(function(){
-      $(this).css('color', 'purple'); // change this to whatever color you want
-  }).mouseout(function(){
-      $(this).css('color', ''); // This will reset the color to its original state when the mouse leaves the icon');
-  });
-});
 
   //a non trivial icon for task box
-  const getIcon = function(category) {
+  const getIcon = function (category) {
     switch (category) {
-    case "Products":
-      return "fa-solid fa-bag-shopping";
-    case "Restaurants":
-      return "fa-solid fa-utensils";
-    case "Books":
-      return "fa-solid fa-book-open";
-    case "Films":
-      return "fa-solid fa-tv";
-    default:
-      return "fa-solid fa-otter";
+      case "Products":
+        return "fa-solid fa-bag-shopping";
+      case "Restaurants":
+        return "fa-solid fa-utensils";
+      case "Books":
+        return "fa-solid fa-book-open";
+      case "Films":
+        return "fa-solid fa-tv";
+      default:
+        return "fa-solid fa-otter";
     }
   };
 
-  //adds color functionality to the trash button
-  $("#to-do-container").on("mouseover", ".fa-trash-can", function() {
+  //adds color functionality to the icons - may need a module?
+
+  $("#to-do-container").on("mouseover", ".fa-trash-can", function () {
     $(this).addClass("text-danger");
   });
 
-  $("#to-do-container").on("mouseout", ".fa-trash-can", function() {
+  $("#to-do-container").on("mouseout", ".fa-trash-can", function () {
     $(this).removeClass("text-danger");
   });
 
+  $("#to-do-container").on("mouseover", ".fa-pen-to-square", function () {
+    $(this).addClass("text-primary");
+  });
+
+  $("#to-do-container").on("mouseout", ".fa-pen-to-square", function () {
+    $(this).removeClass("text-primary");
+  });
+
+  $("#eat").on("mouseenter", function () {
+    $(this).addClass("text-success");
+  });
+
+  $("#eat").on("mouseleave", function () {
+    $(this).removeClass("text-success");
+  });
+
+  $("#watch").on("mouseenter", function () {
+    $(this).addClass("text-success");
+  });
+
+  $("#watch").on("mouseleave", function () {
+    $(this).removeClass("text-success");
+  });
+
+  $("#read").on("mouseenter", function () {
+    $(this).addClass("text-success");
+  });
+
+  $("#read").on("mouseleave", function () {
+    $(this).removeClass("text-success");
+  });
+
+  $("#buy").on("mouseenter", function () {
+    $(this).addClass("text-success");
+  });
+
+  $("#buy").on("mouseleave", function () {
+    $(this).removeClass("text-success");
+  });
+
   //deletes a task via the trash can icon
-  $("#to-do-container").on("click", ".fa-trash-can", function() {
+  $("#to-do-container").on("click", ".fa-trash-can", function () {
     const confirmation = confirm("Are you sure you want to delete this task?");
     const $card = $(this).closest(".card.mx-auto.py-1");
     const taskID = $card.attr("id");
@@ -167,13 +175,13 @@ $(() => {
       $.ajax({
         url: `/tasks/${taskID}`,
         type: "DELETE",
-        success: function(response) {
+        success: function (response) {
           console.log("Successful deletion.");
-          $card.fadeOut(600, function() {
+          $card.fadeOut(600, function () {
             $card.remove();
           });
         },
-        error: function(error) {
+        error: function (error) {
           console.error("Error deleting task:", error);
           alert("Error deleting task. Please try again later.");
         },
@@ -183,17 +191,9 @@ $(() => {
 
   //edit icon functionality
 
-  $("#to-do-container").on("mouseover", ".fa-pen-to-square", function() {
-    $(this).addClass("text-primary");
-  });
-
-  $("#to-do-container").on("mouseout", ".fa-pen-to-square", function() {
-    $(this).removeClass("text-primary");
-  });
-
   //edits the task
-  $("#to-do-container").on("click", ".fa-pen-to-square", function() {
-    $('#popup').remove();
+  $("#to-do-container").on("click", ".fa-pen-to-square", function () {
+    $("#popup").remove();
     const $card = $(this).closest(".card.mx-auto.py-1");
     //Create the popup box and add it to the card
     const popupBox = `<div id="popup" class="popup">
@@ -209,57 +209,63 @@ $(() => {
       </div>`;
     $card.append(popupBox);
 
-    $("#to-do-container").off("click", "#closePopup").on("click", "#closePopup", function() {
-      $("#popup").remove();
-    });
+    $("#to-do-container")
+      .off("click", "#closePopup")
+      .on("click", "#closePopup", function () {
+        $("#popup").remove();
+      });
 
-    $("#to-do-container").off("click", "#submitBtn").on("click", "#submitBtn", function() {
-      if (!$('#taskName').val() || !isNaN($('#taskName').val())) {
-        alert("Please enter a valid task name");
-      } else {
-        if (!$('#date_added').val() || !isValidDateFormat($('#date_added').val())) {
-          alert("Please enter a valid date(YYYY-MM-DD)");
+    $("#to-do-container")
+      .off("click", "#submitBtn")
+      .on("click", "#submitBtn", function () {
+        if (!$("#taskName").val() || !isNaN($("#taskName").val())) {
+          alert("Please enter a valid task name");
         } else {
-          if (!$('#category').val() || !isNaN($('#category').val())) {
-            alert("Please enter a valid category");
+          if (
+            !$("#date_added").val() ||
+            !isValidDateFormat($("#date_added").val())
+          ) {
+            alert("Please enter a valid date(YYYY-MM-DD)");
           } else {
-            //happy path - gather the information and populate our task with it
-            renderTask(
-              createTask(
-                $card.attr('id'),
-                $('#taskName').val(),
-                updateTaskTitle($('#category').val()),
-                $('#date_added').val()
-              )
-            );
-            //call router put
+            if (!$("#category").val() || !isNaN($("#category").val())) {
+              alert("Please enter a valid category");
+            } else {
+              //happy path - gather the information and populate our task with it
+              renderTask(
+                createTask(
+                  $card.attr("id"),
+                  $("#taskName").val(),
+                  updateTaskTitle($("#category").val()),
+                  $("#date_added").val()
+                )
+              );
+              //call router put
 
-
-            $.ajax({
-              type: 'PUT',
-              url: `/tasks/${$card.attr('id')}`,
-              data: JSON.stringify({
-                id: $card.attr('id'),
-                name_of_todo: $('#taskName').val(),
-                date_added: $('#date_added').val(),
-                category_id: checkCategoryID($('#category').val()),
-                completed: 'FALSE'
-              }),
-              dataType: "json",
-              contentType: "application/json",
-              success: function(response) {
-                console.log('Update success: ', response);
-                $('#popup').remove();
-                $card.remove();
-              },
-              error: function(error) {
-                console.log('Update error: ', error);
-              }
-            });
+              $.ajax({
+                type: "PUT",
+                url: `/tasks/${$card.attr("id")}`,
+                data: JSON.stringify({
+                  id: $card.attr("id"),
+                  name_of_todo: $("#taskName").val(),
+                  date_added: $("#date_added").val(),
+                  category_id: checkCategoryID($("#category").val()),
+                  completed: "FALSE",
+                }),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (response) {
+                  console.log("Update success: ", response);
+                  $("#popup").remove();
+                  $card.remove();
+                },
+                error: function (error) {
+                  console.log("Update error: ", error);
+                },
+              });
+            }
           }
         }
-      }
-    });
+      });
   });
 
   //helper function for date checking
@@ -282,5 +288,85 @@ $(() => {
     newDate = new Date(date_added);
     return newDate.toDateString();
   }
+
+  /*<i class="fa-solid fa-utensils fa-xl"></i>
+          <i class="fa-solid fa-tv fa-xl"></i>
+          <i class="fa-solid fa-book-open fa-xl"></i>
+          <i class="fa-solid fa-bag-shopping fa-xl"></i>
+*/
+
+  //filtering the database according to the category...
+
+  //get the restaurants after clicking the 'eat' icon.
+  $("#eat").on("click", function () {
+    $("#to-do-container").empty();
+    $.get("/tasks/restaurants", function (response) {
+      for (let i = 0; i < 3; i++) {
+        let currentTask = response[i];
+        renderTask(
+          createTask(
+            currentTask.id,
+            currentTask.name_of_todo,
+            updateTaskTitle(currentTask.category),
+            convertDate(currentTask.date_added)
+          )
+        );
+      }
+    });
+  });
+  $("#watch").on("click", function () {
+    $("#to-do-container").empty();
+    $.get("/tasks/films", function (response) {
+      for (let i = 0; i < 3; i++) {
+        let currentTask = response[i];
+        renderTask(
+          createTask(
+            currentTask.id,
+            currentTask.name_of_todo,
+            updateTaskTitle(currentTask.category),
+            convertDate(currentTask.date_added)
+          )
+        );
+      }
+    });
+  });
+  $("#read").on("click", function () {
+    $("#to-do-container").empty();
+    $.get("/tasks/books", function (response) {
+      for (let i = 0; i < 3; i++) {
+        let currentTask = response[i];
+        renderTask(
+          createTask(
+            currentTask.id,
+            currentTask.name_of_todo,
+            updateTaskTitle(currentTask.category),
+            convertDate(currentTask.date_added)
+          )
+        );
+      }
+    });
+  });
+  $("#buy").on("click", function () {
+    $("#to-do-container").empty();
+    $.get("/tasks/products", function (response) {
+      for (let i = 0; i < 3; i++) {
+        let currentTask = response[i];
+        renderTask(
+          createTask(
+            currentTask.id,
+            currentTask.name_of_todo,
+            updateTaskTitle(currentTask.category),
+            convertDate(currentTask.date_added)
+          )
+        );
+      }
+    });
+  });
+
+  //add a new task
+  $('#add-todo-button').on('click',() => {
+
+  });
+
 
 });
