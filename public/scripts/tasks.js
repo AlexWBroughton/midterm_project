@@ -360,4 +360,11 @@ $(() => {
       }
     });
   });
+
+  //add a new task
+  $('#add-todo-button').on('click',() => {
+
+  });
+
+
 });
