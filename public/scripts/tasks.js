@@ -474,9 +474,26 @@ $(() => {
       e.stopPropagation();
     });
 
+
     // Clicking on 'Submit' button
     $(document).on("click", "#submitBtn", function () {
       // Add task creation logic here
+
+      //grab the info from the text box.
+      const queryString = $('#todoName').val();
+
+      console.log(queryString);
+
+      //search our api's using the textbox string
+
+
+
+
+
+
+
+
+
 
       // Close the popup
       $("#popup").remove();
