@@ -1,8 +1,7 @@
 $(() => {
+  //HELPER FUNCTION SECTION
 
-//HELPER FUNCTION SECTION
-
-//helper function for date checking
+  //helper function for date checking
   function isValidDateFormat(input) {
     // Regular expression to match the date format 'yyyy-mm-dd'
     const dateRegEx = /^\d{4}-\d{2}-\d{2}$/;
@@ -28,21 +27,23 @@ $(() => {
   };
 
   //helper function to call and render task/todo
-  const generateTask = function(response){
-    if (response){
-      if (response.length<3) {
+  const generateTask = function (response) {
+    if (response) {
+      if (response.length < 3) {
         for (let i = 0; i < response.length; i++) {
           let currentTask = response[i];
-          renderTask(
-            createTask(
-              currentTask.id,
-              currentTask.name_of_todo,
-              updateTaskTitle(currentTask.category),
-              convertDate(currentTask.date_added)
-            )
-          );
-        }
-      } else{
+            if (!currentTask.completed){
+            renderTask(
+              createTask(
+                currentTask.id,
+                currentTask.name_of_todo,
+                updateTaskTitle(currentTask.category),
+                convertDate(currentTask.date_added)
+               )
+             );
+            }
+         }
+      } else {
         for (let i = 0; i < 3; i++) {
           let currentTask = response[i];
           renderTask(
@@ -56,10 +57,10 @@ $(() => {
         }
       }
     }
-  }
+  };
   //a non trivial helper function to change of task box title
   const updateTaskTitle = function (category) {
-     category = category.toLowerCase();
+    category = category.toLowerCase();
     switch (category) {
       case "buy":
       case "products":
@@ -117,7 +118,6 @@ $(() => {
     }
   };
 
-
   //TASK MANAGEMENT FUNCTIONS
 
   //dynamic task creation
@@ -128,23 +128,23 @@ $(() => {
 
     const $task = $(`
     <div class="card mx-auto py-1 " style="width:80%; margin-bottom: 15px" id=${taskID}>
-      <div class="card-header">
-        <i class="${iconClass}"></i>
-        ${category}
-    </div>
+      <div class="card-header d-flex justify-content-between p-3">
+        <div>
+          <i class="${iconClass}"></i>
+          ${category}
+        </div>
+        <div class="form-check" >
+        <label class="form-check-label" for="flexCheckIndeterminate">
+            To-do Complete
+          </label>
+        <input class="form-check-input" type="checkbox" value=""       id="completed">
+        </div>
+      </div>
         <p class="p-3 h5 ">${task}</p>
         <div class="d-flex justify-content-between p-3">
           <div class="justify-content-start text-muted" id="footer-date">Date Added: <span title="Source Title">${date_added}</span>
           </div>
           <div id="footer-icons">
-
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value=""          id="completed">
-              <label class="form-check-label" for="flexCheckIndeterminate">
-                Is your to-do complete?  Check YES!
-              </label>
-            </div>
-
             <a><i class="fa-solid fa-trash-can fa-lg px-2 "></i></a>
             <a><i class="fa-solid fa-pen-to-square fa-lg px-2"></i></a>
           </div>
@@ -153,6 +153,81 @@ $(() => {
     `);
     return $task;
   };
+  //-------------------------------------popup from checkbox-------------
+  let originalColor; // Variable to store original color
+
+  const completeTaskPopupBox = `
+ <div id="completeTaskPopup" class="popup" style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; display: flex; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.5);">
+   <div class="popup-content p-3 border rounded bg-white shadow-lg position-relative" style="max-width: 400px; width: 90%;">
+     <span id="closeCompleteTaskPopup" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 25px; color: red;">&times;</span>
+     <h2 class="text-center my-3">Task Completed!</h2>
+     <div class="d-flex justify-content-center mt-3">
+       <button id="closeCompleteTaskBtn" class="btn btn-primary">This task will be available on your completed tasks above.</button>
+     </div>
+   </div>
+ </div>`;
+  $(document).on("change", "#completed", function () {
+    // If the checkbox is checked
+    if ($(this).is(":checked")) {
+      // Store the original color
+      originalColor = $(this).closest(".card").css("backgroundColor");
+      // If the popup is not already displayed, show it
+      if ($("#completeTaskPopup").length === 0) {
+        $("body").append(completeTaskPopupBox);
+      }
+    } else {
+      // If the checkbox is unchecked, reset the color
+      $(this).closest(".card").find(".completed-on").remove
+      $(this).closest(".card").animate(
+        {
+          backgroundColor: originalColor, // Back to the original color
+        },
+        3000
+      ); // Animation duration in milliseconds
+    }
+  });
+  $(document).on(
+    "click",
+    "#closeCompleteTaskBtn, #closeCompleteTaskPopup",
+    function () {
+      $("#completeTaskPopup").remove();
+      // Check if the checkbox is checked and then animate
+      if ($("#completed").is(":checked")) {
+        // Animate the color of the card
+        $("#completed").closest(".card").animate(
+          {
+            backgroundColor: "#c3e6cb", // The color you want
+          },
+          2000
+        ); // Animation duration in milliseconds
+
+        //do the routerPUT
+
+        let formattedDate = new Date().toISOString().split('T')[0];
+        let $card = $("#completed").closest(".card");
+        $.ajax({
+          type: "PUT",
+          url: `/tasks/completed`,
+          data: JSON.stringify({
+            id: $card.attr("id"),
+            completed: "TRUE",
+            date_completed: formattedDate
+          }),
+          dataType: "json",
+          contentType: "application/json",
+          success: function (response) {
+            console.log("Update success: ", response);
+            $card.find('#footer-date').append(`<div class = "completed-on"> Completed On: ${formattedDate} </div>`);
+          },
+          error: function (error) {
+            console.log("Update error: ", error);
+          },
+      })
+    }
+});
+// Remove the completion date from the footer-date element
+
+  ///////////////////////////////////////////////////////
 
   //edits the task
   $("#to-do-container").on("click", ".fa-pen-to-square", function () {
@@ -330,8 +405,6 @@ $(() => {
     $(this).removeClass("text-success");
   });
 
-
-
   //filtering the database according to the category...
 
   $("#eat").on("click", function () {
@@ -365,36 +438,62 @@ $(() => {
     });
   });
 
-
   //add a new task
   $("#add-todo-button").on("click", () => {
+    const popupBox = `
+    <div id="popup" class="popup" style="position: fixed; width: 110%; height: 110%; top: -5%; left: -5%; display: flex; justify-content: center; align-items: flex-start; background: rgba(0, 0, 0, 0.5);">
+      <div class="popup-content p-3 border rounded bg-white shadow-lg position-relative" style="margin-top: 10%; max-width: 660px; width: 90%;">
+        <span id="closePopup" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 25px; color: red;">&times;</span>
+        <h2 class="text-center my-3">Create a new Task</h2>
+        <input type="text" id="todoName" class="form-control my-3" placeholder="What do you want to do?">
+        <div class="d-flex justify-content-center">
+          <button id="submitBtn" class="btn btn-primary">Add to the list</button>
+        </div>
+      </div>
+    </div>
+    `;
 
+    // Clicking on 'Add Todo' button
+    $(document).on("click", "#add-todo-button", function (e) {
+      e.stopPropagation();
+      // If popup is not already displayed, show it
+      if ($("#popup").length === 0) {
+        $("body").append(popupBox);
+      } else {
+        // If popup is displayed, remove it and then re-append it
+        $("#popup").remove();
+        $("body").append(popupBox);
+      }
+    });
 
-    //create popup
-/*
-    const popupBox = `<div id="popup" class="popup">
-       <div class="popup-content">
-          <h2>Enter Details</h2>
-          <input type="text" id="todoName" placeholder="Please enter a to-do name">
-          <button id="submitBtn">Submit</button>
-          <button id="closePopup">Close</button>
-       </div>
-      </div>`;
-    $("#nav-bar").append(popupBox);
+    // Clicking on 'x' or outside the popup content
+    $(document).on("click", function (e) {
+      if (
+        !$(e.target).closest(".popup-content").length &&
+        !$(e.target).is("#add-todo-button")
+      ) {
+        $("#popup").remove();
+      }
+    });
 
-    $("#add-todo-button")
-    .off("click", "#closePopup")
-    .on("click", "#closePopup", function () {
+    // Prevent event propagation to document when clicking on the popup content
+    $(document).on("click", ".popup-content", function (e) {
+      e.stopPropagation();
+    });
+
+    // Clicking on 'Submit' button
+    $(document).on("click", "#submitBtn", function () {
+      // Add task creation logic here
+
+      // Close the popup
       $("#popup").remove();
     });
 
-    /*renderTask(
-      createTask(
-        currentTask.id,
-        currentTask.name_of_todo,
-        updateTaskTitle(currentTask.category),
-        convertDate(currentTask.date_added)
-      )
-    );*/
+    // Clicking on 'X' button
+    $(document).on("click", "#closePopup", function (e) {
+      e.stopPropagation();
+      // Close the popup
+      $("#popup").remove();
+    });
   });
 });

@@ -11,5 +11,6 @@ CREATE TABLE todos(
   name_of_todo VARCHAR(255),
   category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
   completed BOOLEAN NOT NULL,
-  date_added DATE NOT NULL
+  date_added DATE NOT NULL,
+  date_completed DATE
 );

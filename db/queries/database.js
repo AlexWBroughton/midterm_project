@@ -153,14 +153,29 @@ const getProducts = () => {
       WHERE id=$1;`,
       [taskID]
     )
-      .then((result) => {
-        console.log(`Task with ID ${taskID} deleted.`);
-        return result.rowCount > 0; // Return true if the task was deleted successfully.
-      })
-      .catch((err) => {
-        console.error(`Error deleting task with ID ${taskID}: ${err.message}`);
-        return false; // Return false if there was an error deleting the task.
-      });
+    .then((result) => {
+      console.log(`Task with ID ${taskID} deleted.`);
+      return result.rowCount > 0; // Return true if the task was deleted successfully.
+    })
+    .catch((err) => {
+      console.error(`Error deleting task with ID ${taskID}: ${err.message}`);
+      return false; // Return false if there was an error deleting the task.
+    });
   };
 
-  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask, getOthers };
+  const completeTask = function(taskID,completed,date_completed){
+    return db.query(
+      `UPDATE todos
+       SET completed = $1, date_completed = $2
+       WHERE id = $3;`, [completed,date_completed,taskID]
+    ).then((result) => {
+      console.log(`Task with ID ${taskID} updated.`);
+      return result.rowCount > 0; // Return true if the task was updated successfully.
+    })
+    .catch((err) => {
+      console.error(`Error updating task with ID ${taskID}: ${err.message}`);
+      return false; // Return false if there was an error deleting the task.
+    });
+  };
+
+  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask, getOthers,completeTask };
