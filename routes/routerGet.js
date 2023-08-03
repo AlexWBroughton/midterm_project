@@ -53,6 +53,17 @@ router.get('/products', (req, res) => {
       res.status(500).json({ error: 'Something went wrong' });
     });
 });
+router.get('/others', (req, res) => {
+  database.getOthers() // Fetch all tasks from the database
+    .then((tasks) => {
+      console.log(tasks);
+      res.json(tasks); // Send final response with data
+    })
+    .catch((err) => {
+      console.log('Error fetching tasks:', err.message);
+      res.status(500).json({ error: 'Something went wrong' });
+    });
+});
 router.get('/', (req, res) => {
   database.getTasks() // Fetch all tasks from the database
     .then((tasks) => {

@@ -129,6 +129,24 @@ const getProducts = () => {
     });
   };
 
+  const getOthers = () => {
+    return db.query(
+      `SELECT todos.*,categories.category
+      FROM todos
+      JOIN categories ON todos.category_id = categories.id
+      WHERE todos.category_id = 5
+      ORDER BY todos.date_added
+      LIMIT 15;`
+    )
+      .then((data) => {
+        console.log(data.rows);
+        return data.rows;
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+    };
+
   const deleteTask = (taskID) => {
     return db.query(
       `DELETE FROM todos
@@ -145,4 +163,4 @@ const getProducts = () => {
       });
   };
 
-  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask };
+  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask, getOthers };
