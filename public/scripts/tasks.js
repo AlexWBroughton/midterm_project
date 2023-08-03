@@ -22,7 +22,7 @@ $(() => {
     return newDate.toDateString();
   }
   //prepends tasks onto UI
-  const renderTask = function (task,completed) {
+  const renderTask = function (task) {
     $("#to-do-container").prepend(task);
   };
 
@@ -119,7 +119,7 @@ $(() => {
   //TASK MANAGEMENT FUNCTIONS
 
   //dynamic task creation
-  const createTask = function (taskID, task, category, date_added) {
+  const createTask = function (taskID, name_of_task, category, date_added) {
     const newDate = new Date(date_added);
     console.log("category in createTask", category);
     const iconClass = getIcon(category);
@@ -136,10 +136,10 @@ $(() => {
         <label class="form-check-label" for="flexCheckIndeterminate">
             To-do Complete
           </label>
-          <input class="form-check-input completed" type="checkbox" value="">
+        <input class="form-check-input" type="checkbox" value=""       id="completed">
         </div>
       </div>
-        <p class="p-3 h5 ">${task}</p>
+        <p class="p-3 h5 ">${name_of_task}</p>
         <div class="d-flex justify-content-between p-3">
           <div class="justify-content-start text-muted" id="footer-date">Date Added: <span title="Source Title">${date_added}</span>
           </div>
@@ -166,75 +166,71 @@ $(() => {
     </div>
   </div>`;
 
-  $(document).on("change", ".completed", function () {
-    // Remove previous event handler
-    $(document).off("click", "#closeCompleteTaskBtn, #closeCompleteTaskPopup");
-    let $completedCheckbox = $(this);
-    // If the checkbox is checked
-    if ($completedCheckbox.is(":checked")) {
-      // Store the original color
-      originalColor = $completedCheckbox.closest(".card").css("backgroundColor");
-      // If the popup is not already displayed, show it
-      if ($("#completeTaskPopup").length === 0) {
-        $("body").append(completeTaskPopupBox);
-      }
-    } else {
-      // If the checkbox is unchecked, reset the color
-      $completedCheckbox.closest(".card").find(".completed-on").remove();
-      $completedCheckbox.closest(".card").animate(
-        {
-          backgroundColor: originalColor, // Back to the original color
-        },
-        3000
-      ); // Animation duration in milliseconds
-    }
+ $(document).on("change", "#completed", function () {
+   // Remove previous event handler
+   $(document).off("click", "#closeCompleteTaskBtn, #closeCompleteTaskPopup");
 
-    // Attach the event handlers again
-    $(document).on(
-      "click",
-      "#closeCompleteTaskBtn, #closeCompleteTaskPopup",
-      function () {
-        $("#completeTaskPopup").remove();
-        // Check if the checkbox is checked and then animate
-        if ($completedCheckbox.is(":checked")) {
-          // Animate the color of the card
-          $completedCheckbox.closest(".card").animate(
-            {
-              backgroundColor: "#c3e6cb", // The color you want
-            },
-            2000
-          ); // Animation duration in milliseconds
+   // If the checkbox is checked
+   if ($(this).is(":checked")) {
+     // Store the original color
+     originalColor = $(this).closest(".card").css("backgroundColor");
+     // If the popup is not already displayed, show it
+     if ($("#completeTaskPopup").length === 0) {
+       $("body").append(completeTaskPopupBox);
+     }
+   } else {
+     // If the checkbox is unchecked, reset the color
+     $(this).closest(".card").find(".completed-on").remove();
+     $(this).closest(".card").animate(
+       {
+         backgroundColor: originalColor, // Back to the original color
+       },
+       3000
+     ); // Animation duration in milliseconds
+   }
 
-          // Do the routerPUT
+   // Attach the event handlers again
+   $(document).on(
+     "click",
+     "#closeCompleteTaskBtn, #closeCompleteTaskPopup",
+     function () {
+       $("#completeTaskPopup").remove();
+       // Check if the checkbox is checked and then animate
+       if ($("#completed").is(":checked")) {
+         // Animate the color of the card
+         $("#completed").closest(".card").animate(
+           {
+             backgroundColor: "#c3e6cb", // The color you want
+           },
+           2000
+         );
 
-          let formattedDate = new Date().toISOString().split('T')[0];
-          let $card = $completedCheckbox.closest(".card");
-          $.ajax({
-            type: "PUT",
-            url: `/tasks/completed`,
-            data: JSON.stringify({
-              id: $card.attr("id"),
-              completed: "TRUE",
-              date_completed: formattedDate
-            }),
-            dataType: "json",
-            contentType: "application/json",
-            success: function (response) {
-              console.log("Update success: ", response);
-              $card.find('#footer-date').append(`<div class = "completed-on"> Completed On: ${formattedDate} </div>`);
-            },
-            error: function (error) {
-              console.log("Update error: ", error);
-            },
-          });
-        }
-      }
-    );
-  });
+         // Do the routerPUT
 
-// Remove the completion date from the footer-date element
-
-  ///////////////////////////////////////////////////////
+         let formattedDate = new Date().toISOString().split('T')[0];
+         let $card = $("#completed").closest(".card");
+         $.ajax({
+           type: "PUT",
+           url: `/tasks/completed`,
+           data: JSON.stringify({
+             id: $card.attr("id"),
+             completed: "TRUE",
+             date_completed: formattedDate
+           }),
+           dataType: "json",
+           contentType: "application/json",
+           success: function (response) {
+             console.log("Update success: ", response);
+             $card.find('#footer-date').append(`<div class = "completed-on"> Completed On: ${formattedDate} </div>`);
+           },
+           error: function (error) {
+             console.log("Update error: ", error);
+           },
+         });
+       }
+     }
+   );
+ });
 
   //edits the task
   $("#to-do-container").on("click", ".fa-pen-to-square", function () {
@@ -341,17 +337,7 @@ $(() => {
 
   //populates the UI with tasks ordered by date
   $.get("/tasks", function (response) {
-    for (let i = 0; i < 3; i++) {
-      let currentTask = response[i];
-      renderTask(
-        createTask(
-          currentTask.id,
-          currentTask.name_of_todo,
-          updateTaskTitle(currentTask.category),
-          convertDate(currentTask.date_added),
-        )
-      );
-    }
+    generateTask(response);
   });
 
   //adds color functionality to the icons - may need a module?
