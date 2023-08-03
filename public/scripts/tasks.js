@@ -289,11 +289,6 @@ $(() => {
     return newDate.toDateString();
   }
 
-  /*<i class="fa-solid fa-utensils fa-xl"></i>
-          <i class="fa-solid fa-tv fa-xl"></i>
-          <i class="fa-solid fa-book-open fa-xl"></i>
-          <i class="fa-solid fa-bag-shopping fa-xl"></i>
-*/
 
   //filtering the database according to the category...
 
@@ -364,9 +359,34 @@ $(() => {
   });
 
   //add a new task
-  $('#add-todo-button').on('click',() => {
+  $("#add-todo-button").on("click", () => {
 
+
+    //create popup
+
+    const popupBox = `<div id="popup" class="popup">
+       <div class="popup-content">
+          <h2>Enter Details</h2>
+          <input type="text" id="todoName" placeholder="Please enter a to-do name">
+          <button id="submitBtn">Submit</button>
+          <button id="closePopup">Close</button>
+       </div>
+      </div>`;
+    $("#nav-bar").append(popupBox);
+
+    $("#add-todo-button")
+    .off("click", "#closePopup")
+    .on("click", "#closePopup", function () {
+      $("#popup").remove();
+    });
+
+    /*renderTask(
+      createTask(
+        currentTask.id,
+        currentTask.name_of_todo,
+        updateTaskTitle(currentTask.category),
+        convertDate(currentTask.date_added)
+      )
+    );*/
   });
-
-
 });
