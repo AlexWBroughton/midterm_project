@@ -44,6 +44,7 @@ const getBookDetails = (bookTitle) => {
         } else {
           const bookDetails = {
             Title: bookData.items[0].volumeInfo.title,
+            printType: bookData.items[0].volumeInfo.printType
           };
 
           resolve(bookDetails);
@@ -67,9 +68,7 @@ const getMovieDetails = (movieTitle) => {
     return { error: errorMessage };
   }
 
-  const apiUrl = `http://www.omdbapi.com/?apikey=${apiKey}&t=${encodeURIComponent(
-    movieTitle
-  )}`;
+  const apiUrl = `http://www.omdbapi.com/?apikey=${apiKey}&t=${encodeURIComponent(movieTitle)}`;
 
   return new Promise((resolve, reject) => {
     request(apiUrl, (error, response, body) => {
@@ -101,15 +100,14 @@ const getMovieDetails = (movieTitle) => {
           console.error(errorMessage);
           reject(new Error(errorMessage));
         } else {
-          // Extract only the required information and add the Type field
+          // Extract only the required information
           const simplifiedMovieDetails = {
             Title: movieDetails.Title,
-            Type: movieDetails.Type.toLowerCase(), // Convert to lowercase for consistency
+            Type: movieDetails.Type,
             // Add more properties as needed
           };
 
           resolve(simplifiedMovieDetails);
-
         }
       }
     });
@@ -121,18 +119,20 @@ const getMovieDetails = (movieTitle) => {
 
 
 
+
+
 const checkWolfram = (task) => {
 
-  console.log("task =",task[0]);
+  console.log("task =",task);
 
 
-  const apiUrl = `http://api.wolframalpha.com/v2/query?input=${task[0]}&appid=${process.env.W_API_KEY}`;
+  const apiUrl = `http://api.wolframalpha.com/v2/query?input=${task}&appid=${process.env.W_API_KEY}`;
 
   return new Promise((resolve, reject) => {
     request(apiUrl, (error, response, body) => {
       if (error) {
         // If the request fails
-        const errorMessage = `Failed to fetch Wolfram details for ${task[0]}`;
+        const errorMessage = `Failed to fetch Wolfram details for ${task}`;
         console.error(errorMessage, error.message); // Log the error message
         reject(new Error(errorMessage));
       } else{
@@ -144,7 +144,7 @@ const checkWolfram = (task) => {
     })
   })
   .catch((error) => {
-    console.log(error);
+    console.log('there is an error' + error);
   });
 };
 
@@ -159,122 +159,49 @@ const getRestaurant = (task) => {
     return { error: 'API key is missing or invalid' };
   }
 
-  const apiUrl = new URL('https://maps.googleapis.com/maps/api/place/findplacefromtext/json');
+  const apiUrl = new URL('https://maps.googleapis.com/maps/api/place/textsearch/json');
   const params = new URLSearchParams({
-    fields: 'name',
-    input: task, // Use the task parameter directly as the input
-    inputtype: 'textquery',
-    key: apiKey
+    query: task,
+    key: apiKey,
   });
 
-  apiUrl.search = params.toString(); // Construct the API URL
+  apiUrl.search = params.toString();
 
   return new Promise((resolve, reject) => {
     request(apiUrl.toString(), (error, response, body) => {
       if (error) {
-        // If the request fails
         const errorMessage = `Failed to fetch restaurant details for ${task}`;
-        console.error(errorMessage, error.message); // Log the error message
+        console.error(errorMessage, error.message);
         reject(new Error(errorMessage));
       } else {
-        let restaurantData;
+        let placeData;
         try {
-          restaurantData = JSON.parse(body);
+          placeData = JSON.parse(body);
         } catch (error) {
           console.error(`Failed to parse JSON: ${error.message}`);
           reject(new Error(`Failed to parse JSON: ${error.message}`));
         }
 
-        if (restaurantData.status !== 'OK' || restaurantData.candidates.length === 0) {
-          // If the API returns an error or no restaurant found, handle it here
-          const errorMessage = `Restaurant not found for ${task}`;
-          console.error(errorMessage);
+        if (placeData.status !== 'OK' || placeData.results.length === 0) {
+          const errorMessage = `Place not found for ${task}`;
+          //console.error(errorMessage);
           reject(new Error(errorMessage));
         } else {
-          // Extract only the required information
-          const restaurantDetails = { Name: restaurantData.candidates[0].name };
-          resolve(restaurantDetails);
+          const placeDetails = {
+            Name: placeData.results[0].name,
+            Type: placeData.results[0].types,
+          };
+          resolve(placeDetails);
         }
       }
     });
   }).catch((error) => {
-    // Handle the rejected promise here
     console.error(error.message);
-    return { error: 'Restaurant not found' }; // Provide a fallback response or error handling
+    return { error: 'Place not found' };
   });
 };
 
 
-const getProduct = (productName) => {
-  const apiKey = process.env.PROD_API_KEY;
-  const apiUrl = 'https://product-categorization.p.rapidapi.com/products/v1/categorized';
-
-  const options = {
-    method: 'GET',
-    url: apiUrl,
-    qs: {
-      title: productName,
-      price: '200' // price is a required parameter, we may need to change to our needs
-    },
-    headers: {
-      'X-RapidAPI-Key': apiKey,
-      'X-RapidAPI-Host': 'product-categorization.p.rapidapi.com'
-    }
-  };
-
-  return new Promise((resolve, reject) => {
-    request(options, (error, response, body) => {
-      if (error) {
-        const errorMessage = `Failed to fetch product details for ${productName}`;
-        console.error(errorMessage, error.message);
-        reject(new Error(errorMessage));
-      } else {
-        if (response.statusCode !== 200) {
-          const errorMessage = `Failed to fetch product details for ${productName}`;
-          console.error(errorMessage, response.statusCode);
-          reject(new Error(errorMessage));
-        } else {
-          const productData = JSON.parse(body);
-          if (!productData.title) {
-            // If the API returns an error or no product found, handle it here
-            const errorMessage = `Product not found for ${productName}`;
-            console.error(errorMessage);
-            reject(new Error(errorMessage));
-          } else {
-            // Extract only the required information
-            const productDetails = { Name: productData.title };
-            resolve(productDetails);
-          }
-        }
-      }
-    });
-  }).catch((error) => {
-    // Handle the rejected promise here
-    console.error(error.message);
-    return { error: 'Product not found' }; // Provide a fallback response or error handling
-  });
-};
-
-module.exports = { getBookDetails, getMovieDetails,checkWolfram,getProduct,getRestaurant};
+module.exports = { getBookDetails, getMovieDetails, checkWolfram, getRestaurant};
 
 
-
-
-// const interpretTask = (task) => {
-//   if (task.includes("eat")) {
-//     // User wants to find a restaurant
-//     return getRestaurant(task);
-//   } else if (task.includes("buy")) {
-//     // User wants to find a product
-//     return getProduct(task);
-//   } else if (task.includes("watch")) {
-//     // User wants to find a movie
-//     return getMovieDetails(task);
-//   } else if (task.includes("read")) {
-//     // User wants to find a book
-//     return getBookDetails(task);
-//   } else {
-//     // If no keyword is found, check Wolfram
-//     return checkWolfram(task);
-//   }
-// };

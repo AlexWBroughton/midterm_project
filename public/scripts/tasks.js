@@ -166,71 +166,65 @@ $(() => {
     </div>
   </div>`;
 
- $(document).on("change", "#completed", function () {
-   // Remove previous event handler
-   $(document).off("click", "#closeCompleteTaskBtn, #closeCompleteTaskPopup");
+  $(document).on("change", "#completed", function () {
+    $(document).off("click", "#closeCompleteTaskBtn, #closeCompleteTaskPopup");
 
-   // If the checkbox is checked
-   if ($(this).is(":checked")) {
-     // Store the original color
-     originalColor = $(this).closest(".card").css("backgroundColor");
-     // If the popup is not already displayed, show it
-     if ($("#completeTaskPopup").length === 0) {
-       $("body").append(completeTaskPopupBox);
-     }
-   } else {
-     // If the checkbox is unchecked, reset the color
-     $(this).closest(".card").find(".completed-on").remove();
-     $(this).closest(".card").animate(
-       {
-         backgroundColor: originalColor, // Back to the original color
-       },
-       3000
-     ); // Animation duration in milliseconds
-   }
+    let $card = $(this).closest(".card");
 
-   // Attach the event handlers again
-   $(document).on(
-     "click",
-     "#closeCompleteTaskBtn, #closeCompleteTaskPopup",
-     function () {
-       $("#completeTaskPopup").remove();
-       // Check if the checkbox is checked and then animate
-       if ($("#completed").is(":checked")) {
-         // Animate the color of the card
-         $("#completed").closest(".card").animate(
-           {
-             backgroundColor: "#c3e6cb", // The color you want
-           },
-           2000
-         );
+    if ($(this).is(":checked")) {
+        originalColor = $card.css("backgroundColor");
+       if ($("#completeTaskPopup").length === 0) {
+        $("body").append(completeTaskPopupBox);
+      }
+    } else {
+      // If the checkbox is unchecked, reset the color
+      $card.find(".completed-on").remove();
+      $card.animate(
+        {
+          backgroundColor: originalColor,
+        },
+        3000
+      );
+    }
 
-         // Do the routerPUT
+    $(document).on(
+      "click",
+      "#closeCompleteTaskBtn, #closeCompleteTaskPopup",
+      function () {
+        $("#completeTaskPopup").remove();
 
-         let formattedDate = new Date().toISOString().split('T')[0];
-         let $card = $("#completed").closest(".card");
-         $.ajax({
-           type: "PUT",
-           url: `/tasks/completed`,
-           data: JSON.stringify({
-             id: $card.attr("id"),
-             completed: "TRUE",
-             date_completed: formattedDate
-           }),
-           dataType: "json",
-           contentType: "application/json",
-           success: function (response) {
-             console.log("Update success: ", response);
-             $card.find('#footer-date').append(`<div class = "completed-on"> Completed On: ${formattedDate} </div>`);
-           },
-           error: function (error) {
-             console.log("Update error: ", error);
-           },
-         });
-       }
-     }
-   );
- });
+        if ($("#completed").is(":checked")) {
+          $card.animate(
+            {
+              backgroundColor: "#c3e6cb",
+            },
+            2000
+          );
+
+          let formattedDate = new Date().toISOString().split('T')[0];
+          $.ajax({
+            type: "PUT",
+            url: `/tasks/completed`,
+            data: JSON.stringify({
+              id: $card.attr("id"),
+              completed: "TRUE",
+              date_completed: formattedDate
+            }),
+            dataType: "json",
+            contentType: "application/json",
+            success: function (response) {
+              console.log("Update success: ", response);
+              // Ensure that the selector #footer-date is present in each card.
+              $card.find('#footer-date').append(`<div class = "completed-on"> Completed On: ${formattedDate} </div>`);
+            },
+            error: function (error) {
+              console.log("Update error: ", error);
+            },
+          });
+        }
+      }
+    );
+  });
 
   //edits the task
   $("#to-do-container").on("click", ".fa-pen-to-square", function () {
@@ -477,22 +471,16 @@ $(() => {
 
     // Clicking on 'Submit' button
     $(document).on("click", "#submitBtn", function () {
-      // Add task creation logic here
+
 
       //grab the info from the text box.
       const queryString = $('#todoName').val();
 
-      console.log(queryString);
-
       //search our api's using the textbox string
 
-
-
-
-
-
-
-
+      $.post('tasks/api',{input: queryString},function(response) {
+        console.log(response);
+      });
 
 
       // Close the popup
