@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const database = require('../db/queries/database');
+
 const {
   checkWolfram,
   getMovieDetails,
@@ -9,25 +11,18 @@ const {
 } = require("./api");
 const bodyParser = require("body-parser"); //
 
-async function processTask(task) {
-  const result1 = await getRestaurant(task);
-  const result2 = await getMovieDetails(task);
-  const result3 = await getBookDetails(task);
-  const result4 = await checkWolfram(task);
 
-  console.log("##1 result1 --> ", result1);
-  console.log("##2 result2 --> ", result2);
-  console.log("##3 result3 --> ", result3);
-  console.log("##4 result4 --> ", result4);
+//an asynchronous function that processess the taskquery
+async function processTask(task) {
 
   try {
     let result = await getRestaurant(task);
     if (
       result.Type &&
-      (result.Type.includes("restaurant") || result.Type.includes("food"))
+      (result.Type.includes("restaurant") || result.Type.includes("cafe"))
     ) {
       console.log("firing first if block");
-      return { taskName: result.Name, taskType: result.Type[0] };
+      return { Title: task, Type: result.Type[0],Category: "eat",CategoryID: 1};
     }
     result = await getMovieDetails(task);
     if (result.Title) {
@@ -45,7 +40,7 @@ async function processTask(task) {
       result.includes("AdministrativeDivision" || result.includes("retail"))
     ) {
       console.log("firing third if block");
-      return { taskName: task, taskType: "Product" };
+      return { Title: task, Type: "Product",Category: "buy",CategoryID: 4};
     }
     result = await getBookDetails(task);
     console.log("firing fourth if block");
@@ -58,6 +53,9 @@ async function processTask(task) {
     throw error;
   }
 }
+
+
+
 
 router.post("/api", (req, res) => {
   console.log('req.body   ' , req.body);
@@ -72,10 +70,24 @@ router.post("/api", (req, res) => {
     .then((result) => {
       console.log("Final Result:", result);
       return res.json(result);
+
     })
     .catch((error) => {
       console.error("Error:", error);
     });
+});
+
+router.post("/newTask", (req, res) => {
+  const newTask = req.body;
+  console.log("req.body in /newTask   ",req.body);
+  database.createNewTask(newTask)
+  .then(() => {
+    res.sendStatus(204); // Send 204 (No Content) for successful deletion.
+    })
+  .catch((e) => {
+    console.error(e);
+    res.sendStatus(500); // Send 500 (Internal Server Error) for other errors.
+  });
 });
 
 module.exports = router;

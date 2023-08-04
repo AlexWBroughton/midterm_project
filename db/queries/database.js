@@ -2,7 +2,6 @@ const db = require('../connection');
 
 // gets information from our database files.
 const getTasks = () => {
-  console.log('here in getTASKS');
   return db.query(
     `SELECT todos.*,categories.category
     FROM todos
@@ -11,7 +10,6 @@ const getTasks = () => {
     LIMIT 15;`
   )
     .then((data) => {
-      console.log(data.rows);
       return data.rows;
     })
     .catch((err) => {
@@ -19,6 +17,22 @@ const getTasks = () => {
     });
 };
 
+const getLastTaskID = () => {
+  console.log('here in getLastTASKID');
+  return db.query(
+    `SELECT todos.id
+    FROM todos
+    ORDER BY todos.id DESC
+    LIMIT 1;`
+  )
+    .then((data) => {
+      console.log(data.rows[0]);
+      return data.rows[0];
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+};
 
 
 
@@ -178,4 +192,22 @@ const getProducts = () => {
     });
   };
 
-  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask, getOthers,completeTask };
+
+  const createNewTask = function(newTask){
+
+    return db.query(
+      `INSERT INTO todos (id,name_of_todo,category_id,completed,date_added,date_completed)
+       VALUES ($1,$2,$3,$4,$5,$6)`,
+      [newTask.taskID, newTask.name_of_todo, newTask.categoryID, "FALSE", newTask.date_added, newTask.date_completed]
+      ).then((result) => {
+      console.log(`Task with ID ${newTask.taskID} updated.`);
+      return result.rowCount > 0; // Return true if the task was updated successfully.
+    })
+    .catch((err) => {
+      console.error(`Error updating task with ID ${newTask.taskID}: ${err.message}`);
+      return false; // Return false if there was an error deleting the task.
+    });
+  }
+
+
+  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask, getOthers,completeTask,getLastTaskID,createNewTask };

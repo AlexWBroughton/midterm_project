@@ -1,6 +1,7 @@
 $(() => {
   //HELPER FUNCTION SECTION
 
+
   //helper function for date checking
   function isValidDateFormat(input) {
     // Regular expression to match the date format 'yyyy-mm-dd'
@@ -15,12 +16,31 @@ $(() => {
     const date = new Date(input);
     return !isNaN(date.getTime());
   }
-
-  //date and time conversion helper function
+//************************date *****************************/
   function convertDate(date_added) {
     newDate = new Date(date_added);
     return newDate.toDateString();
   }
+
+
+  function databaseConvertDate(dateObj) {
+    if (!(dateObj instanceof Date)) {
+        console.error('dateObj is not a Date instance:', dateObj);
+        return null;
+    }
+
+    let year = dateObj.getFullYear();
+    let month = dateObj.getMonth() + 1;
+    let day = dateObj.getDate();
+
+    // Pad the month and day with leading zeros if necessary
+    month = month < 10 ? '0' + month : month;
+    day = day < 10 ? '0' + day : day;
+
+    return year + '-' + month + '-' + day;
+  }  //yyyy=mmm=dd
+
+// ***************************end of date ****************************
   //prepends tasks onto UI
   const renderTask = function (task) {
     $("#to-do-container").prepend(task);
@@ -32,6 +52,7 @@ $(() => {
       if (response.length < 3) {
         for (let i = 0; i < response.length; i++) {
           let currentTask = response[i];
+          console.log(currentTask + "    CurrentTask");
           renderTask(
             createTask(
               currentTask.id,
@@ -49,13 +70,19 @@ $(() => {
               currentTask.id,
               currentTask.name_of_todo,
               updateTaskTitle(currentTask.category),
-              convertDate(currentTask.date_added),
+              convertDate(currentTask.date_added)
             )
           );
         }
       }
     }
   };
+  //populates the UI with tasks ordered by date
+  $.get("/tasks", function (response) {
+    generateTask(response);
+  });
+
+
   //a non trivial helper function to change of task box title
   const updateTaskTitle = function (category) {
     category = category.toLowerCase();
@@ -100,16 +127,25 @@ $(() => {
     }
   };
 
+  // case R.id.someValue :
+  // case R.id.someOtherValue :
+       //do stuff
+
+
   //a non trivial icon for task box helper function
   const getIcon = function (category) {
     switch (category) {
       case "Products":
+      case "buy":
         return "fa-solid fa-bag-shopping";
       case "Restaurants":
+      case "eat":
         return "fa-solid fa-utensils";
       case "Books":
+      case "read":
         return "fa-solid fa-book-open";
       case "Films":
+      case "watch":
         return "fa-solid fa-tv";
       default:
         return "fa-solid fa-otter";
@@ -121,9 +157,7 @@ $(() => {
   //dynamic task creation
   const createTask = function (taskID, name_of_task, category, date_added) {
     const newDate = new Date(date_added);
-    console.log("category in createTask", category);
     const iconClass = getIcon(category);
-
 
     const $task = $(`
     <div class="card mx-auto py-1 " style="width:80%; margin-bottom: 15px" id=${taskID}>
@@ -172,8 +206,8 @@ $(() => {
     let $card = $(this).closest(".card");
 
     if ($(this).is(":checked")) {
-        originalColor = $card.css("backgroundColor");
-       if ($("#completeTaskPopup").length === 0) {
+      originalColor = $card.css("backgroundColor");
+      if ($("#completeTaskPopup").length === 0) {
         $("body").append(completeTaskPopupBox);
       }
     } else {
@@ -201,21 +235,25 @@ $(() => {
             2000
           );
 
-          let formattedDate = new Date().toISOString().split('T')[0];
+          let formattedDate = new Date().toISOString().split("T")[0];
           $.ajax({
             type: "PUT",
             url: `/tasks/completed`,
             data: JSON.stringify({
               id: $card.attr("id"),
               completed: "TRUE",
-              date_completed: formattedDate
+              date_completed: formattedDate,
             }),
             dataType: "json",
             contentType: "application/json",
             success: function (response) {
               console.log("Update success: ", response);
               // Ensure that the selector #footer-date is present in each card.
-              $card.find('#footer-date').append(`<div class = "completed-on"> Completed On: ${formattedDate} </div>`);
+              $card
+                .find("#footer-date")
+                .append(
+                  `<div class = "completed-on"> Completed On: ${formattedDate} </div>`
+                );
             },
             error: function (error) {
               console.log("Update error: ", error);
@@ -329,10 +367,7 @@ $(() => {
     }
   });
 
-  //populates the UI with tasks ordered by date
-  $.get("/tasks", function (response) {
-    generateTask(response);
-  });
+
 
   //adds color functionality to the icons - may need a module?
 
@@ -424,6 +459,7 @@ $(() => {
       generateTask(response);
     });
   });
+//////////////////////////////////////////////////////////
 
   //add a new task
   $("#add-todo-button").on("click", () => {
@@ -442,7 +478,7 @@ $(() => {
 
     // Clicking on 'Add Todo' button
     $(document).on("click", "#add-todo-button", function (e) {
-      e.stopPropagation();
+       e.stopPropagation();
       // If popup is not already displayed, show it
       if ($("#popup").length === 0) {
         $("body").append(popupBox);
@@ -465,33 +501,60 @@ $(() => {
 
     // Prevent event propagation to document when clicking on the popup content
     $(document).on("click", ".popup-content", function (e) {
-      e.stopPropagation();
+       e.stopPropagation();
     });
-
 
     // Clicking on 'Submit' button
     $(document).on("click", "#submitBtn", function () {
-
-
       //grab the info from the text box.
-      const queryString = $('#todoName').val();
+      const queryString = $("#todoName").val();
+       // Close the popup right away
+    $("#popup").remove();
 
       //search our api's using the textbox string
+      $.post("tasks/api", { input: queryString }, function (response) {
+        const currentDate = new Date();
 
-      $.post('tasks/api',{input: queryString},function(response) {
-        console.log(response);
+
+        $.get("/tasks/lastID", function (res) {
+          const nextTaskID = res.id + 1;
+          const newTask = {
+            taskID: nextTaskID,
+            name_of_todo: response.Title,
+            category: response.Category,
+            categoryID: response.CategoryID,
+            date_added: databaseConvertDate(currentDate),
+            date_completed:databaseConvertDate(currentDate)
+          };
+
+          console.log("new Task above Post ", newTask);
+          console.log("nexttaskid  ", nextTaskID);
+          if (newTask.name_of_todo){
+            $.post("tasks/newTask", newTask, function () {
+              console.log("here in the newtask post");
+              renderTask(
+                createTask(
+                  nextTaskID,
+                  response.Title,
+                  response.Category,
+                  databaseConvertDate(currentDate)
+                )
+              );
+            });
+          }
+        });
       });
-
-
       // Close the popup
-      $("#popup").remove();
+      console.log("outside :)")
+      // $("#popup").remove();
     });
 
     // Clicking on 'X' button
     $(document).on("click", "#closePopup", function (e) {
-      e.stopPropagation();
+       e.stopPropagation();
       // Close the popup
       $("#popup").remove();
     });
   });
 });
+

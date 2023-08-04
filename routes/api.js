@@ -44,7 +44,9 @@ const getBookDetails = (bookTitle) => {
         } else {
           const bookDetails = {
             Title: bookData.items[0].volumeInfo.title,
-            printType: bookData.items[0].volumeInfo.printType
+            Type: bookData.items[0].volumeInfo.printType,
+            Category: "read",
+            CategoryID: 3
           };
 
           resolve(bookDetails);
@@ -104,6 +106,8 @@ const getMovieDetails = (movieTitle) => {
           const simplifiedMovieDetails = {
             Title: movieDetails.Title,
             Type: movieDetails.Type,
+            CategoryID:2,
+            Category: "watch"
             // Add more properties as needed
           };
 
@@ -139,7 +143,6 @@ const checkWolfram = (task) => {
         const obj = convert.xml2js(body);
         console.log(obj.elements[0].attributes.datatypes);
         resolve(obj.elements[0].attributes.datatypes);
-
       }
     })
   })
@@ -188,7 +191,7 @@ const getRestaurant = (task) => {
           reject(new Error(errorMessage));
         } else {
           const placeDetails = {
-            Name: placeData.results[0].name,
+            Title: placeData.results[0].name,
             Type: placeData.results[0].types,
           };
           resolve(placeDetails);
