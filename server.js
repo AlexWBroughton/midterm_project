@@ -7,6 +7,8 @@ const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cookieSession = require("cookie-session");
+
 
 
 const PORT = process.env.PORT || 8080;
@@ -29,7 +31,17 @@ app.use(
     isSass: false, // false => scss, true => sass
   })
 );
+
 app.use(express.static('public'));
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: require("keygrip")(["SEKRIT2", "SEKRIT1"], "sha256", "hex"),
+    // Cookie Options
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  })
+);
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
@@ -47,7 +59,7 @@ app.use('/tasks', routerDelete);
 app.use('/tasks', routerPut);
 
 
-// const userApiRoutes = require('./routes/users-api');
+const userApiRoutes = require('./routes/users-api');
 // const usersRoutes = require('./routes/users');
 
 
@@ -55,7 +67,7 @@ app.use('/tasks', routerPut);
 // Note: Feel free to replace the example routes below with your own
 // Note: Endpoints that return data (eg. JSON) usually start with `/api`
 
- //app.use('/api/users', userApiRoutes);
+app.use('/api/users', userApiRoutes);
 // app.use('/api/films', filmsApiRoutes);
 // app.use('/api/books', booksRouter);
 
