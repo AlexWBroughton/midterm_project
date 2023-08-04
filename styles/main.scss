@@ -15,38 +15,14 @@ body {
   );
 }
 
-// #add-item {
-//   animation-duration: 2s;
-//   animation-name: slidein;
-//   // right: 5px;
-//   left:165px;
-//   top: 0px;
-//   z-index: -2;
-//   width:1345px;
-//   // border-radius : 40%;
-//   // transition: left ease-in-out 0.5s;
-// }
-
-// @keyframes slidein {
-//   from {
-//     margin-left: 100%;
-//   }
-//   to {
-//     margin-left:0%;
-//   }
-// }
-
-// #add-item-cover {
-//   position: absolute;
-//   right: 0px;
-//   top: 114px;
-//   z-index: 0;
-//   width:4%;
-//   height:3rem;
-//   background-color: lightblue;
-//   border-radius: 4%;
-// }
-
 #add-todo-button:hover  {
-  color:magenta;
-  }
+color:magenta;
+}
+
+#loginSection {
+  padding-right:160px;
+}
+
+.btn-update-profile {
+  margin-right: 16px;
+}
