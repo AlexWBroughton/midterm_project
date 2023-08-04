@@ -129,20 +129,53 @@ const getProducts = () => {
     });
   };
 
+  const getOthers = () => {
+    return db.query(
+      `SELECT todos.*,categories.category
+      FROM todos
+      JOIN categories ON todos.category_id = categories.id
+      WHERE todos.category_id = 5
+      ORDER BY todos.date_added
+      LIMIT 15;`
+    )
+      .then((data) => {
+        console.log(data.rows);
+        return data.rows;
+      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+    };
+
   const deleteTask = (taskID) => {
     return db.query(
       `DELETE FROM todos
       WHERE id=$1;`,
       [taskID]
     )
-      .then((result) => {
-        console.log(`Task with ID ${taskID} deleted.`);
-        return result.rowCount > 0; // Return true if the task was deleted successfully.
-      })
-      .catch((err) => {
-        console.error(`Error deleting task with ID ${taskID}: ${err.message}`);
-        return false; // Return false if there was an error deleting the task.
-      });
+    .then((result) => {
+      console.log(`Task with ID ${taskID} deleted.`);
+      return result.rowCount > 0; // Return true if the task was deleted successfully.
+    })
+    .catch((err) => {
+      console.error(`Error deleting task with ID ${taskID}: ${err.message}`);
+      return false; // Return false if there was an error deleting the task.
+    });
   };
 
-  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask };
+  const completeTask = function(taskID,completed,date_completed){
+    return db.query(
+      `UPDATE todos
+       SET completed = $1, date_completed = $2
+       WHERE id = $3;`, [completed,date_completed,taskID]
+    ).then((result) => {
+      console.log(`Task with ID ${taskID} updated.`);
+      return result.rowCount > 0; // Return true if the task was updated successfully.
+    })
+    .catch((err) => {
+      console.error(`Error updating task with ID ${taskID}: ${err.message}`);
+      return false; // Return false if there was an error deleting the task.
+    });
+  };
+
+  module.exports = { getFilms, getRestaurants, getBooks, getProducts, getTasks, deleteTask, updateTask, getOthers,completeTask };

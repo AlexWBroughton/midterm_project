@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <!--<i class="fa-solid fa-utensils"></i>-->
@@ -47,13 +47,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- populate the lists-->
-    <script src="/scripts/tasks.js"></script>
+    <script src = "/scripts/tasks.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="/scripts/login.js"></script>
+
+
   </head>
 
-  <body>
+  <body id = "body">
     <!-- Bootstrap Image and text navbar-->
-    <nav class="navbar navbar-light bg-light py-2">
+    <nav class="navbar navbar-light bg-light py-2" id = "nav-bar">
       <div>
         <a class="navbar-brand" href="#">
           <!-- placeholder logo -->
@@ -68,11 +71,12 @@
         </a>
 
         <!-- need to add anchor tags to link to specific filters -->
-        <div class="d-flex justify-content-around py-4" id="navBarIcons">
-          <i class="fa-solid fa-utensils fa-xl" id="eat"></i>
-          <i class="fa-solid fa-tv fa-xl" id="watch"></i>
-          <i class="fa-solid fa-book-open fa-xl" id="read"></i>
-          <i class="fa-solid fa-bag-shopping fa-xl" id="buy"></i>
+        <div class="d-flex justify-content-around py-4">
+          <i class="fa-solid fa-utensils fa-xl" id = 'eat'></i>
+          <i class="fa-solid fa-tv fa-xl" id = 'watch'></i>
+          <i class="fa-solid fa-book-open fa-xl" id = 'read'></i>
+          <i class="fa-solid fa-bag-shopping fa-xl" id = 'buy'></i>
+          <i class="fa-solid fa-solid fa-otter fa-xl" id = 'other'></i>
         </div>
       </div>
       <div id="loginSection" class="mx-5">
